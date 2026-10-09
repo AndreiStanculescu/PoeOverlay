@@ -37,6 +37,14 @@ namespace MyPoeOverlay
         private bool _timerPaused;
         private bool _timerManuallyStopped;
 
+        private bool _isLoadingSettings;
+
+        private string SettingsPath => Path.Combine(
+            Environment.GetFolderPath(
+                Environment.SpecialFolder.LocalApplicationData),
+            "MyPoeOverlay",
+            "settings.json");
+
         private string TimerHistoryPath =>
             Path.Combine(
                 Environment.GetFolderPath(
@@ -53,7 +61,7 @@ namespace MyPoeOverlay
 
             MouseLeftButtonDown += Overlay_MouseLeftButtonDown;
             Loaded += MainWindow_Loaded;
-            
+
             Closed += (_, _) =>
             {
                 if (_currentSession != null)
@@ -66,27 +74,29 @@ namespace MyPoeOverlay
                     SaveTimerHistory();
                 }
 
+                SaveSettings();
+
                 _timerUi.Stop();
                 _cancellation.Cancel();
             };
 
-
-                    _timerUi.Interval = TimeSpan.FromSeconds(1);
-        _timerUi.Tick += (_, _) =>
-        {
-            UpdateTimerDisplay();
-            UpdateActTimesDisplay();
-            // Salvare periodică pentru a limita pierderea datelor
-            // dacă aplicația se închide neașteptat.
-            if (DateTime.UtcNow - _lastTimerSaveUtc >=
-                TimeSpan.FromSeconds(10))
+            _timerUi.Interval = TimeSpan.FromSeconds(1);
+            _timerUi.Tick += (_, _) =>
             {
-                SaveCurrentActElapsed();
-                SaveTimerHistory();
-            }
-        };
+                UpdateTimerDisplay();
+                UpdateActTimesDisplay();
 
+                // Salvare periodică pentru a limita pierderea datelor
+                // dacă aplicația se închide neașteptat.
+                if (DateTime.UtcNow - _lastTimerSaveUtc >=
+                    TimeSpan.FromSeconds(10))
+                {
+                    SaveCurrentActElapsed();
+                    SaveTimerHistory();
+                }
+            };
         }
+
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
@@ -107,6 +117,8 @@ namespace MyPoeOverlay
 
             this.Opacity = opacity;
             OpacityValueText.Text = $"{OpacitySlider.Value:0}%";
+
+            SaveSettings();
         }
 
 
@@ -128,6 +140,8 @@ namespace MyPoeOverlay
 
             if (_steps.Count > 0)
                 UpdateOverlay();
+
+            SaveSettings();
         }
 
 
@@ -136,7 +150,7 @@ namespace MyPoeOverlay
         {
             try
             {
-
+                LoadSettings();
                 LoadTimerHistory();
                 UpdateTimerDisplay();
 
@@ -1135,6 +1149,108 @@ namespace MyPoeOverlay
 
             // Actele terminate efectiv în această sesiune.
             public List<string> CompletedActs { get; set; } = new();
+        }
+
+        private sealed class OverlaySettings
+        {
+            public double OpacityPercent { get; set; } = 100;
+            public double FontSize { get; set; } = 16;
+
+            public double WindowWidth { get; set; } = 390;
+            public double WindowHeight { get; set; } = 520;
+
+            public double WindowLeft { get; set; } = 100;
+            public double WindowTop { get; set; } = 100;
+        }
+        
+        private void LoadSettings()
+        {
+            _isLoadingSettings = true;
+
+            try
+            {
+                try
+                {
+                    if (File.Exists(SettingsPath))
+                    {
+                        string json = File.ReadAllText(SettingsPath);
+
+                        OverlaySettings? settings =
+                            JsonSerializer.Deserialize<OverlaySettings>(json);
+
+                        if (settings != null)
+                        {
+                            OpacitySlider.Value =
+                                Math.Clamp(settings.OpacityPercent, 35, 100);
+
+                            FontSizeSlider.Value =
+                                Math.Clamp(settings.FontSize, 10, 24);
+
+                            Width = Math.Max(MinWidth, settings.WindowWidth);
+                            Height = Math.Max(MinHeight, settings.WindowHeight);
+
+                            Left = settings.WindowLeft;
+                            Top = settings.WindowTop;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Settings load error: {ex.Message}");
+                }
+
+                // Actualizează interfața inclusiv dacă fișierul nu există
+                // sau dacă nu a putut fi citit.
+                OpacitySlider_ValueChanged(
+                    OpacitySlider,
+                    new RoutedPropertyChangedEventArgs<double>(
+                        OpacitySlider.Value,
+                        OpacitySlider.Value));
+
+                FontSizeSlider_ValueChanged(
+                    FontSizeSlider,
+                    new RoutedPropertyChangedEventArgs<double>(
+                        FontSizeSlider.Value,
+                        FontSizeSlider.Value));
+            }
+            finally
+            {
+                _isLoadingSettings = false;
+            }
+        }
+
+        private void SaveSettings()
+        {
+            if (_isLoadingSettings)
+                return;
+
+            try
+            {
+                string? directory = Path.GetDirectoryName(SettingsPath);
+
+                if (!string.IsNullOrWhiteSpace(directory))
+                    Directory.CreateDirectory(directory);
+
+                var settings = new OverlaySettings
+                {
+                    OpacityPercent = OpacitySlider.Value,
+                    FontSize = FontSizeSlider.Value,
+                    WindowWidth = Width,
+                    WindowHeight = Height,
+                    WindowLeft = Left,
+                    WindowTop = Top
+                };
+
+                string json = JsonSerializer.Serialize(
+                    settings,
+                    new JsonSerializerOptions { WriteIndented = true });
+
+                File.WriteAllText(SettingsPath, json);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Settings save error: {ex.Message}");
+            }
         }
 
     }
