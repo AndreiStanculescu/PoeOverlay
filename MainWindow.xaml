@@ -19,18 +19,121 @@
             Padding="15">
 
         <Grid>
+            <Grid.Resources>
+                <Style TargetType="{x:Type Slider}">
+                    <Setter Property="Height" Value="22"/>
+                    <Setter Property="Foreground" Value="#FFF2C75C"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Slider}">
+                                <Grid>
+                                    <Track x:Name="PART_Track"
+                                           IsDirectionReversed="{TemplateBinding IsDirectionReversed}"
+                                           Minimum="{TemplateBinding Minimum}"
+                                           Maximum="{TemplateBinding Maximum}"
+                                           Value="{TemplateBinding Value}">
+                                        <Track.DecreaseRepeatButton>
+                                            <RepeatButton Command="Slider.DecreaseLarge"
+                                                          Focusable="False"
+                                                          IsTabStop="False">
+                                                <RepeatButton.Template>
+                                                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                                                        <Border Height="4"
+                                                                Background="#FFF2C75C"
+                                                                CornerRadius="2"
+                                                                VerticalAlignment="Center"/>
+                                                    </ControlTemplate>
+                                                </RepeatButton.Template>
+                                            </RepeatButton>
+                                        </Track.DecreaseRepeatButton>
+                                        <Track.Thumb>
+                                            <Thumb Width="14"
+                                                   Height="14"
+                                                   Background="#FFFFCC00">
+                                                <Thumb.Template>
+                                                    <ControlTemplate TargetType="{x:Type Thumb}">
+                                                        <Border Background="{TemplateBinding Background}"
+                                                                BorderBrush="#FFFFE080"
+                                                                BorderThickness="1"
+                                                                CornerRadius="7"/>
+                                                    </ControlTemplate>
+                                                </Thumb.Template>
+                                            </Thumb>
+                                        </Track.Thumb>
+                                        <Track.IncreaseRepeatButton>
+                                            <RepeatButton Command="Slider.IncreaseLarge"
+                                                          Focusable="False"
+                                                          IsTabStop="False">
+                                                <RepeatButton.Template>
+                                                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                                                        <Border Height="4"
+                                                                Background="#FF494949"
+                                                                CornerRadius="2"
+                                                                VerticalAlignment="Center"/>
+                                                    </ControlTemplate>
+                                                </RepeatButton.Template>
+                                            </RepeatButton>
+                                        </Track.IncreaseRepeatButton>
+                                    </Track>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+                <Style TargetType="{x:Type ScrollBar}">
+                    <Setter Property="Width" Value="3"/>
+                    <Setter Property="Height" Value="3"/>
+                    <Setter Property="Background" Value="#FF202020"/>
+                    <Setter Property="Foreground" Value="#FF806B2D"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                <Track x:Name="PART_Track"
+                                       IsDirectionReversed="True"
+                                       Orientation="{TemplateBinding Orientation}"
+                                       Minimum="{TemplateBinding Minimum}"
+                                       Maximum="{TemplateBinding Maximum}"
+                                       Value="{TemplateBinding Value}"
+                                       ViewportSize="{TemplateBinding ViewportSize}">
+                                    <Track.Thumb>
+                                        <Thumb Background="#FF806B2D">
+                                            <Thumb.Template>
+                                                <ControlTemplate TargetType="{x:Type Thumb}">
+                                                    <Border Background="{TemplateBinding Background}"
+                                                            CornerRadius="2"
+                                                            Margin="0.5"/>
+                                                </ControlTemplate>
+                                            </Thumb.Template>
+                                        </Thumb>
+                                    </Track.Thumb>
+                                </Track>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="Orientation" Value="Horizontal">
+                                        <Setter Property="Height" Value="3"/>
+                                        <Setter Property="Width" Value="Auto"/>
+                                    </Trigger>
+                                    <Trigger Property="Orientation" Value="Vertical">
+                                        <Setter Property="Width" Value="3"/>
+                                        <Setter Property="Height" Value="Auto"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Grid.Resources>
             <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <!-- Header -->
-            <Grid Grid.Row="0">
+            <Grid Grid.Row="0"
+                  Margin="0,0,0,8">
                 <TextBlock Text="POE LEVELING"
                            Foreground="#FFFFCC00"
                            FontSize="18"
@@ -77,6 +180,78 @@
     <TabControl Background="#FF202020"
                 Foreground="White"
                 BorderThickness="0">
+        <TabControl.Template>
+            <ControlTemplate TargetType="{x:Type TabControl}">
+                <Grid KeyboardNavigation.TabNavigation="Local">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0"
+                                Orientation="Horizontal"
+                                Margin="0,0,4,0"
+                                IsItemsHost="True"
+                                KeyboardNavigation.TabIndex="1">
+                    </StackPanel>
+
+                    <Border Grid.Row="1"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter x:Name="PART_SelectedContentHost"
+                                          ContentSource="SelectedContent"
+                                          KeyboardNavigation.DirectionalNavigation="Contained"/>
+                    </Border>
+                </Grid>
+            </ControlTemplate>
+        </TabControl.Template>
+        <TabControl.Resources>
+            <Style TargetType="{x:Type TabItem}">
+                <Setter Property="Foreground" Value="#FFFFCC00"/>
+                <Setter Property="Background" Value="#FF292929"/>
+                <Setter Property="BorderBrush" Value="#FF555555"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Padding" Value="10,6"/>
+                <Setter Property="Margin" Value="0,0,8,0"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type TabItem}">
+                            <Border x:Name="TabBorder"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="5"
+                                    Margin="1"
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter ContentSource="Header"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  RecognizesAccessKey="True"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter TargetName="TabBorder"
+                                            Property="Background"
+                                            Value="#FF3A3524"/>
+                                    <Setter TargetName="TabBorder"
+                                            Property="BorderBrush"
+                                            Value="#FF665522"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="TabBorder"
+                                            Property="Background"
+                                            Value="#FF353023"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </TabControl.Resources>
 
         <!-- APPEARANCE TAB -->
         <TabItem Header="Appearance"
@@ -120,6 +295,8 @@
                             Maximum="100"
                             Value="100"
                             TickFrequency="5"
+                            SmallChange="1"
+                            LargeChange="5"
                             IsSnapToTickEnabled="False"
                             ValueChanged="OpacitySlider_ValueChanged"/>
                 </Grid>
@@ -135,7 +312,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="Text size"
+                    <TextBlock Text="Text size (px)"
                                Grid.Row="0"
                                Grid.Column="0"
                                Foreground="White"
@@ -155,7 +332,9 @@
                             Maximum="24"
                             Value="16"
                             TickFrequency="1"
-                            IsSnapToTickEnabled="False"
+                            SmallChange="1"
+                            LargeChange="1"
+                            IsSnapToTickEnabled="True"
                             ValueChanged="FontSizeSlider_ValueChanged"/>
                 </Grid>
 
@@ -274,6 +453,24 @@
                                                     Binding="{Binding BestTime}"
                                                     Width="82"
                                                     MinWidth="72"/>
+
+                                <DataGridTemplateColumn Header="Clear"
+                                                        Width="56">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="Clear"
+                                                    Tag="{Binding ActName}"
+                                                    Click="ClearActTimesButton_Click"
+                                                    Padding="4,2"
+                                                    FontSize="9"
+                                                    Background="#FF3A2929"
+                                                    Foreground="#FFFFB0B0"
+                                                    BorderBrush="#FF704545"
+                                                    BorderThickness="1"
+                                                    Cursor="Hand"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                             </DataGrid.Columns>
 
                         </DataGrid>
@@ -283,64 +480,122 @@
             </TabControl>
         </Border>
 
+            <!-- Compact secondary timer -->
+            <Border Grid.Row="3"
+                    Background="#252831"
+                    CornerRadius="7"
+                    Padding="6,4"
+                    Margin="0,6,0,4">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-            <!-- Progress -->
-            <TextBlock x:Name="ProgressText"
-                       Grid.Row="2"
-                       Text="Loading route..."
-                       Foreground="#FFAAAAAA"
-                       FontSize="12"
-                       Margin="0,8,0,12"/>
-
-
-                       <Border Grid.Row="3"
-                        Background="#252831"
-                        CornerRadius="8"
-                        Padding="10"
-                        Margin="0,6,0,8">
-                    <StackPanel>
-                        <DockPanel>
+                    <StackPanel Grid.Column="0"
+                                VerticalAlignment="Center">
                             <TextBlock x:Name="TimerActText"
-                                    Text="Waiting for Act 1"
-                                    Foreground="White"
-                                    FontSize="13"
-                                    FontWeight="SemiBold"/>
+                                       Text="Waiting for Act 1"
+                                       Foreground="White"
+                                       FontSize="10"
+                                       FontWeight="SemiBold"
+                                       TextTrimming="CharacterEllipsis"/>
 
-                            <TextBlock x:Name="TimerStatusText"
-                                    Text="WAITING"
-                                    Foreground="#B0B4BE"
-                                    FontSize="10"
-                                    HorizontalAlignment="Right"
-                                    DockPanel.Dock="Right"/>
-                        </DockPanel>
-
-                        <TextBlock x:Name="TimerText"
-                                Text="00:00:00"
-                                Foreground="#F2C75C"
-                                FontSize="28"
-                                FontWeight="Bold"
-                                HorizontalAlignment="Center"
-                                Margin="0,5,0,8"/>
-
-                        <UniformGrid Columns="3">
-                            <Button Content="Start"
-                                    Click="StartTimerButton_Click"
-                                    Margin="2"/>
-
-                            <Button Content="Pause"
-                                    Click="PauseTimerButton_Click"
-                                    Margin="2"/>
-
-                            <Button Content="Stop"
-                                    Click="StopTimerButton_Click"
-                                    Margin="2"/>
-                        </UniformGrid>
+                            <TextBlock x:Name="TimerText"
+                                       Text="00:00:00"
+                                       Foreground="#F2C75C"
+                                       FontSize="18"
+                                       FontWeight="Bold"
+                                       Margin="0,1,0,0"/>
                     </StackPanel>
-                </Border>
+
+                    <Grid Grid.Column="1"
+                          VerticalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock x:Name="TimerStatusText"
+                                   Grid.Row="0"
+                                   Text="WAITING"
+                                   Foreground="#B0B4BE"
+                                   FontSize="8"
+                                   HorizontalAlignment="Right"
+                                   Margin="0,0,2,1"/>
+
+                        <UniformGrid Grid.Row="1"
+                                     Columns="3">
+                            <UniformGrid.Resources>
+                                <Style TargetType="{x:Type Button}">
+                                    <Setter Property="Height" Value="25"/>
+                                    <Setter Property="Margin" Value="2"/>
+                                    <Setter Property="Padding" Value="4,1"/>
+                                    <Setter Property="Background" Value="#FF292929"/>
+                                    <Setter Property="Foreground" Value="#FFFFCC00"/>
+                                    <Setter Property="BorderBrush" Value="#FF665522"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type Button}">
+                                                <Border x:Name="ButtonBorder"
+                                                        Background="{TemplateBinding Background}"
+                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                        CornerRadius="5"
+                                                        Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter HorizontalAlignment="Center"
+                                                                      VerticalAlignment="Center"
+                                                                      RecognizesAccessKey="True"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="ButtonBorder"
+                                                                Property="Background"
+                                                                Value="#FF3A3524"/>
+                                                        <Setter TargetName="ButtonBorder"
+                                                                Property="BorderBrush"
+                                                                Value="#FFFFCC00"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter TargetName="ButtonBorder"
+                                                                Property="Background"
+                                                                Value="#FF51451F"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsEnabled" Value="False">
+                                                        <Setter TargetName="ButtonBorder"
+                                                                Property="Opacity"
+                                                                Value="0.55"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </UniformGrid.Resources>
+                        <Button Content="Start"
+                                Click="StartTimerButton_Click"
+                                Margin="2"/>
+
+                        <Button Content="Pause"
+                                Click="PauseTimerButton_Click"
+                                Margin="2"/>
+
+                        <Button Content="Stop"
+                                Click="StopTimerButton_Click"
+                                Margin="2"/>
+                        </UniformGrid>
+                    </Grid>
+                </Grid>
+            </Border>
 
             <!-- Act selector and objectives -->
-            <Grid Grid.Row="4">
+            <Grid Grid.Row="2"
+                  Margin="0,4,0,0">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
@@ -348,48 +603,196 @@
 
                 <ComboBox x:Name="ActComboBox"
                           Grid.Row="0"
+                          SelectedValuePath="ActName"
                           Height="34"
-                          Margin="0,0,0,12"
+                          Margin="0,0,0,8"
                           Padding="8,4"
                           FontSize="14"
+                          FontWeight="Bold"
                           Background="#FF292929"
                           Foreground="#FFFFCC00"
                           BorderBrush="#FF555555"
-                          SelectionChanged="ActComboBox_SelectionChanged"/>
+                          HorizontalContentAlignment="Center"
+                          SelectionChanged="ActComboBox_SelectionChanged">
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ComboBoxItem}">
+                            <Setter Property="Height" Value="34"/>
+                            <Setter Property="Padding" Value="8,4"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                            <Setter Property="FontSize" Value="14"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                            <Setter Property="Foreground" Value="#FFFFCC00"/>
+                            <Setter Property="Background" Value="#FF292929"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                                        <Border x:Name="ItemBackground"
+                                                Background="{TemplateBinding Background}"
+                                                SnapsToDevicePixels="True">
+                                            <ContentPresenter
+                                                              Margin="{TemplateBinding Padding}"
+                                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                              RecognizesAccessKey="True"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsHighlighted" Value="True">
+                                                <Setter TargetName="ItemBackground"
+                                                        Property="Background"
+                                                        Value="#FF3A3524"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Height="30">
+                                <TextBlock Text="{Binding DisplayName}"
+                                           Foreground="#FFFFCC00"
+                                           FontSize="12"
+                                           FontWeight="Bold"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                    <ComboBox.Template>
+                        <ControlTemplate TargetType="{x:Type ComboBox}">
+                            <Grid>
+                                <Border Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        CornerRadius="5"/>
 
-                <TextBlock Grid.Row="1"
+                                <ToggleButton x:Name="DropDownToggle"
+                                              Focusable="False"
+                                              ClickMode="Press"
+                                              IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                                    <ToggleButton.Template>
+                                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                            <Border Background="Transparent">
+                                                <Path Data="M 0 0 L 5 5 L 10 0"
+                                                      Stroke="#FFFFE080"
+                                                      StrokeThickness="2"
+                                                      StrokeStartLineCap="Round"
+                                                      StrokeEndLineCap="Round"
+                                                      HorizontalAlignment="Right"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,13,0"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </ToggleButton.Template>
+                                </ToggleButton>
+
+                                <ContentPresenter Margin="8,0"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  Content="{TemplateBinding SelectionBoxItem}"
+                                                  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                  ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
+                                                  IsHitTestVisible="False"/>
+
+                                <Popup x:Name="PART_Popup"
+                                       AllowsTransparency="True"
+                                       Focusable="False"
+                                       IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                       PlacementTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                                       Placement="Bottom"
+                                       Width="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
+                                       PopupAnimation="Slide">
+                                    <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="5">
+                                        <ScrollViewer MaxHeight="300"
+                                                      CanContentScroll="True">
+                                            <ItemsPresenter/>
+                                        </ScrollViewer>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </ControlTemplate>
+                    </ComboBox.Template>
+                </ComboBox>
+
+                <TextBlock x:Name="ProgressText"
+                           Grid.Row="1"
+                           Text="Loading route..."
+                           Foreground="#FFAAAAAA"
+                           FontSize="11"
+                           Margin="0,0,0,5"/>
+
+                <TextBlock Grid.Row="2"
                            Text="ACT OBJECTIVES"
                            Foreground="#FFFFCC00"
                            FontSize="10"
                            FontWeight="Bold"
-                           Margin="0,0,0,8"/>
+                           Margin="0,0,0,6"/>
 
-                <ScrollViewer Grid.Row="2"
+                <ScrollViewer x:Name="ObjectiveScrollViewer"
+                              Grid.Row="3"
+                              Padding="0,0,6,0"
                               VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Disabled">
                     <ItemsControl x:Name="ObjectiveList">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Grid Margin="0,0,0,12">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="24"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
+                                <Border Margin="0,0,0,10"
+                                        Padding="9"
+                                        Background="#FF222225"
+                                        BorderBrush="{Binding BorderBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="7">
+                                    <StackPanel>
+                                        <DockPanel LastChildFill="True">
+                                            <TextBlock Text="{Binding Marker}"
+                                                       Foreground="{Binding MarkerBrush}"
+                                                       FontSize="18"
+                                                       FontWeight="Bold"
+                                                       VerticalAlignment="Center"
+                                                       Margin="0,0,9,0"/>
+                                            <StackPanel>
+                                                <TextBlock Text="NEXT AREA"
+                                                           Foreground="#FFAAAAAA"
+                                                           FontSize="9"
+                                                           FontWeight="Bold"/>
+                                                <TextBlock Text="{Binding Title}"
+                                                           Foreground="{Binding TextBrush}"
+                                                           FontSize="{Binding FontSize}"
+                                                           FontWeight="SemiBold"
+                                                           TextWrapping="Wrap"/>
+                                                <TextBlock Text="{Binding Details}"
+                                                           Foreground="#FFAAAAAA"
+                                                           FontSize="10"
+                                                           TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </DockPanel>
 
-                                    <TextBlock Grid.Column="0"
-                                               Text="{Binding Marker}"
-                                               Foreground="{Binding MarkerBrush}"
-                                               FontSize="17"
-                                               FontWeight="Bold"
-                                               VerticalAlignment="Top"/>
-
-                                    <TextBlock Grid.Column="1"
-                                                Text="{Binding Description}"
-                                                Foreground="{Binding TextBrush}"
-                                                FontSize="{Binding FontSize}"
-                                                TextWrapping="Wrap"
-                                                VerticalAlignment="Top"/>
-                                </Grid>
+                                        <ItemsControl ItemsSource="{Binding SubObjectives}"
+                                                      Margin="25,7,0,0">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <DockPanel Margin="0,2,0,2"
+                                                               LastChildFill="True">
+                                                        <TextBlock Text="{Binding Marker}"
+                                                                   Foreground="{Binding MarkerBrush}"
+                                                                   FontSize="{Binding FontSize}"
+                                                                   FontWeight="Bold"
+                                                                   Margin="0,0,7,0"/>
+                                                        <TextBlock Text="{Binding Description}"
+                                                                   Foreground="{Binding TextBrush}"
+                                                                   FontSize="{Binding FontSize}"
+                                                                   TextWrapping="Wrap"/>
+                                                    </DockPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
@@ -398,7 +801,7 @@
 
             <!-- Client log status -->
             <TextBlock x:Name="ClientLogStatus"
-                       Grid.Row="5"
+                       Grid.Row="4"
                        Text="Waiting for Client.txt..."
                        Foreground="#FFAAAAAA"
                        FontSize="10"
@@ -406,52 +809,58 @@
                        Margin="0,8,0,8"/>
 
             <!-- Manual navigation -->
-            <StackPanel Grid.Row="6"
-                        Orientation="Horizontal"
-                        HorizontalAlignment="Stretch">
+            <Grid Grid.Row="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="32"/>
+                </Grid.ColumnDefinitions>
 
                 <Button Content="← Previous"
+                        Grid.Column="0"
                         Height="34"
-                        Width="165"
-                        Margin="0,0,10,0"
+                        Margin="0,0,5,0"
                         Background="#FF292929"
                         Foreground="White"
                         BorderBrush="#FF555555"
+                        FontWeight="Bold"
                         Click="PreviousStepButton_Click"
                         Cursor="Hand"/>
 
                 <Button Content="Next →"
+                        Grid.Column="1"
                         Height="34"
-                        Width="165"
+                        Margin="5,0,0,0"
                         Background="#FF3A3524"
                         Foreground="#FFFFCC00"
                         BorderBrush="#FF665522"
+                        FontWeight="Bold"
                         Click="NextStepButton_Click"
                         Cursor="Hand"/>
-            </StackPanel>
-            <!-- Resize handle -->
-            <Thumb x:Name="ResizeThumb"
-                    Grid.Row="0"
-                    Grid.RowSpan="7"
-                   HorizontalAlignment="Right"
-                   VerticalAlignment="Bottom"
-                   Width="18"
-                   Height="18"
-                   Cursor="SizeNWSE"
-                   Background="Transparent"
-                   DragDelta="ResizeThumb_DragDelta">
-                <Thumb.Template>
-                    <ControlTemplate TargetType="{x:Type Thumb}">
-                        <Grid Background="Transparent">
-                            <TextBlock Text="◢"
-                                       Foreground="#FF888888"
-                                       FontSize="15"
-                                       HorizontalAlignment="Right"
-                                       VerticalAlignment="Bottom"/>
-                        </Grid>
-                    </ControlTemplate>
-                </Thumb.Template>
-            </Thumb>
+
+                <!-- Resize handle occupies its own space beside the navigation buttons. -->
+                <Thumb x:Name="ResizeThumb"
+                       Grid.Column="2"
+                       Width="32"
+                       Height="34"
+                       Cursor="SizeNWSE"
+                       Background="Transparent"
+                       DragDelta="ResizeThumb_DragDelta">
+                    <Thumb.Template>
+                        <ControlTemplate TargetType="{x:Type Thumb}">
+                            <Grid Background="Transparent">
+                                <TextBlock Text="◢"
+                                           Foreground="#FFAAAAAA"
+                                           FontSize="20"
+                                           HorizontalAlignment="Right"
+                                           VerticalAlignment="Bottom"
+                                           Margin="0,0,2,2"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Thumb.Template>
+                </Thumb>
+            </Grid>
+
         </Grid>
     </Border>
 </Window>

@@ -19,6 +19,7 @@ namespace MyPoeOverlay
     public partial class MainWindow : Window
     {
         private readonly List<RouteStep> _steps = new();
+        private List<ActChoice> _actChoices = new();
         private readonly Dictionary<string, string> _areaNames =
             new(StringComparer.OrdinalIgnoreCase);
 
@@ -30,14 +31,17 @@ namespace MyPoeOverlay
 
         private LevelingSession? _currentSession;
         private string? _timedActName;
+        private string? _preparedActName;
 
         private TimeSpan _elapsedBeforeStart = TimeSpan.Zero;
         private DateTime _lastTimerSaveUtc = DateTime.MinValue;
 
         private bool _timerPaused;
         private bool _timerManuallyStopped;
+        private bool _timerWaitingForArea;
 
         private bool _isLoadingSettings;
+        private bool _isUpdatingActSelection;
 
         private string SettingsPath => Path.Combine(
             Environment.GetFolderPath(
@@ -132,11 +136,19 @@ namespace MyPoeOverlay
                 ObjectiveList == null)
                 return;
 
-            double size = FontSizeSlider.Value;
+            double size = Math.Round(
+                FontSizeSlider.Value,
+                MidpointRounding.AwayFromZero);
+
+            if (FontSizeSlider.Value != size)
+            {
+                FontSizeSlider.Value = size;
+                return;
+            }
 
             ProgressText.FontSize = size;
             ClientLogStatus.FontSize = Math.Max(9, size - 3);
-            FontSizeValueText.Text = $"{size:0}";
+            FontSizeValueText.Text = $"{size:0} px";
 
             if (_steps.Count > 0)
                 UpdateOverlay();
@@ -152,11 +164,11 @@ namespace MyPoeOverlay
             {
                 LoadSettings();
                 LoadTimerHistory();
-                UpdateTimerDisplay();
 
                 LoadAreas();
                 LoadRoute();
 
+                UpdateTimerDisplay();
                 UpdateOverlay();
                 UpdateActTimesDisplay();
 
@@ -175,10 +187,11 @@ namespace MyPoeOverlay
             }
             catch (Exception ex)
             {
-                ClientLogStatus.Text = "Error: " + ex.Message;
+                ClientLogStatus.Text = ex.ToString();
             }
         }
 
+       
         private void LoadAreas()
         {
             string path = Path.Combine(
@@ -187,17 +200,36 @@ namespace MyPoeOverlay
             using JsonDocument doc = JsonDocument.Parse(
                 File.ReadAllText(path));
 
+            if (doc.RootElement.ValueKind != JsonValueKind.Object)
+            {
+                throw new InvalidDataException(
+                    "Routes/areas.json must contain a JSON object.");
+            }
+
             foreach (JsonProperty area in doc.RootElement.EnumerateObject())
             {
-                if (area.Value.TryGetProperty("name", out JsonElement name))
-                {
-                    string? areaName = name.GetString();
+                string? areaName = null;
 
-                    if (!string.IsNullOrWhiteSpace(areaName))
-                        _areaNames[area.Name] = areaName;
+                if (area.Value.ValueKind == JsonValueKind.String)
+                {
+                    // Format: "area_id": "Area Name"
+                    areaName = area.Value.GetString();
+                }
+                else if (area.Value.ValueKind == JsonValueKind.Object &&
+                        area.Value.TryGetProperty("name", out JsonElement name) &&
+                        name.ValueKind == JsonValueKind.String)
+                {
+                    // Format: "area_id": { "name": "Area Name" }
+                    areaName = name.GetString();
+                }
+
+                if (!string.IsNullOrWhiteSpace(areaName))
+                {
+                    _areaNames[area.Name] = areaName;
                 }
             }
         }
+
 
         private void LoadRoute()
         {
@@ -209,31 +241,28 @@ namespace MyPoeOverlay
 
             foreach (JsonElement act in doc.RootElement.EnumerateArray())
             {
+                if (act.ValueKind != JsonValueKind.Object)
+                    continue;
+
                 string actName = act.GetProperty("name").GetString()
                                  ?? "Unknown act";
 
-                foreach (JsonElement step in
-                         act.GetProperty("steps").EnumerateArray())
+                JsonElement[] actSteps =
+                    act.GetProperty("steps").EnumerateArray().ToArray();
+
+                for (int stepIndex = 0; stepIndex < actSteps.Length; stepIndex++)
                 {
+                    JsonElement step = actSteps[stepIndex];
+
                     if (!step.TryGetProperty("parts", out JsonElement parts))
                         continue;
 
                     string description = RenderParts(parts);
-                    string? enterAreaId = null;
-
-                    foreach (JsonElement part in parts.EnumerateArray())
-                    {
-                        if (part.ValueKind != JsonValueKind.Object)
-                            continue;
-
-                        if (GetString(part, "type") == "enter")
-                        {
-                            enterAreaId = GetString(part, "areaId");
-                            break;
-                        }
-                    }
+                    string? enterAreaId = GetEnterAreaId(step);
 
                     string details = "";
+                    List<string> waypointDestinations =
+                        GetWaypointDestinations(step);
 
                     if (step.TryGetProperty("subSteps", out JsonElement subSteps)
                         && subSteps.ValueKind == JsonValueKind.Array)
@@ -257,24 +286,151 @@ namespace MyPoeOverlay
 
                     _steps.Add(new RouteStep(
                         actName, description, enterAreaId, details));
+
+                    string? logoutTownAreaId = GetLogoutAreaId(step);
+                    string? nextStepEnterAreaId =
+                        stepIndex + 1 < actSteps.Length
+                            ? GetEnterAreaId(actSteps[stepIndex + 1])
+                            : null;
+
+                    if (logoutTownAreaId != null &&
+                        !string.Equals(
+                            logoutTownAreaId,
+                            nextStepEnterAreaId,
+                            StringComparison.OrdinalIgnoreCase))
+                    {
+                        string townName =
+                            _areaNames.TryGetValue(
+                                logoutTownAreaId, out string? areaName)
+                                ? areaName
+                                : logoutTownAreaId;
+
+                        _steps.Add(new RouteStep(
+                            actName,
+                            "➞ " + townName,
+                            logoutTownAreaId,
+                            ""));
+                    }
+
+                    foreach (string destination in waypointDestinations)
+                    {
+                        if (string.Equals(
+                            destination,
+                            nextStepEnterAreaId,
+                            StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+
+                        string destinationName =
+                            _areaNames.TryGetValue(
+                                destination, out string? areaName)
+                                ? areaName
+                                : destination;
+
+                        _steps.Add(new RouteStep(
+                            actName,
+                            "➞ " + destinationName,
+                            destination,
+                            ""));
+                    }
                 }
             }
 
-            ActComboBox.ItemsSource = _steps
-            .Select(s => s.ActName)
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToList();
+            List<string> actNames = _steps
+                .Select(step => step.ActName)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
 
-        if (ActComboBox.Items.Count > 0)
-            ActComboBox.SelectedIndex = 0;
+            _actChoices = actNames
+                .Select(CreateActChoice)
+                .ToList();
+
+            ActComboBox.SelectedValuePath = nameof(ActChoice.ActName);
+            ActComboBox.ItemsSource = _actChoices;
+
+            if (_actChoices.Count > 0)
+                ActComboBox.SelectedValue = _actChoices[0].ActName;
+        }
+
+        private ActChoice CreateActChoice(string actName)
+        {
+            return new ActChoice(actName, actName);
         }
 
         private void ActComboBox_SelectionChanged(
             object sender,
             System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            if (_steps.Count > 0)
-                UpdateOverlay();
+            if (_steps.Count == 0 || _isUpdatingActSelection)
+                return;
+
+            string? selectedAct = ActComboBox.SelectedValue as string;
+
+            if (string.IsNullOrWhiteSpace(selectedAct))
+                return;
+
+            int firstStepIndex = _steps.FindIndex(step =>
+                string.Equals(
+                    step.ActName,
+                    selectedAct,
+                    StringComparison.OrdinalIgnoreCase));
+
+            if (firstStepIndex < 0)
+                return;
+
+            _currentStepIndex = firstStepIndex;
+            PrepareTimerForAct(selectedAct);
+            UpdateOverlay();
+            ScrollObjectivesToTop();
+        }
+
+        private void PrepareTimerForAct(string actName)
+        {
+            _timerManuallyStopped = false;
+
+            if (_currentSession == null)
+            {
+                _preparedActName = actName;
+                _timedActName = actName;
+                _elapsedBeforeStart = TimeSpan.Zero;
+                _actStopwatch.Reset();
+                _timerPaused = true;
+                _timerWaitingForArea = true;
+                _timerUi.Stop();
+            }
+            else if (!string.Equals(
+                _timedActName,
+                actName,
+                StringComparison.OrdinalIgnoreCase))
+            {
+                SaveCurrentActElapsed();
+                _elapsedBeforeStart = _currentSession.ActTimesSeconds.TryGetValue(
+                    actName, out long elapsedSeconds)
+                    ? TimeSpan.FromSeconds(elapsedSeconds)
+                    : TimeSpan.Zero;
+                _timedActName = actName;
+                _actStopwatch.Reset();
+                _timerPaused = true;
+                _timerWaitingForArea = true;
+                _timerUi.Stop();
+            }
+
+            UpdateTimerDisplay();
+            UpdateActTimesDisplay();
+        }
+
+        private void SelectActForCurrentStep(string actName)
+        {
+            _isUpdatingActSelection = true;
+            try
+            {
+                ActComboBox.SelectedValue = actName;
+            }
+            finally
+            {
+                _isUpdatingActSelection = false;
+            }
         }
 
 
@@ -312,9 +468,43 @@ namespace MyPoeOverlay
                         break;
 
                     case "quest":
-                        result.Append("quest ").Append(
-                            GetString(part, "questId") ?? "");
+                        result.Append(
+                            GetString(part, "npcName")
+                            ?? "quest " + (GetString(part, "questId") ?? ""));
                         break;
+
+                    case "logout":
+                        result.Append("Logout");
+                        break;
+
+                    case "ascend":
+                        result.Append("Ascend");
+                        break;
+
+                    case "portal_use":
+                        result.Append(GetString(part, "displayText") ?? "Portal");
+                        break;
+
+                    case "portal_set":
+                        result.Append("portal");
+                        break;
+
+                    case "dir":
+                    {
+                        result.Append(part.GetProperty("dirIndex").GetInt32() switch
+                        {
+                            0 => "North",
+                            1 => "North-East",
+                            2 => "East",
+                            3 => "South-East",
+                            4 => "South",
+                            5 => "South-West",
+                            6 => "West",
+                            7 => "North-West",
+                            _ => "direction"
+                        });
+                        break;
+                    }
 
                     case "waypoint_get":
                         result.Append("waypoint");
@@ -348,6 +538,87 @@ namespace MyPoeOverlay
                    && value.ValueKind == JsonValueKind.String
                 ? value.GetString()
                 : null;
+        }
+
+        private static string? GetEnterAreaId(JsonElement step)
+        {
+            if (!step.TryGetProperty("parts", out JsonElement parts) ||
+                parts.ValueKind != JsonValueKind.Array)
+            {
+                return null;
+            }
+
+            foreach (JsonElement part in parts.EnumerateArray())
+            {
+                if (part.ValueKind == JsonValueKind.Object &&
+                    GetString(part, "type") == "enter")
+                {
+                    return GetString(part, "areaId");
+                }
+            }
+
+            return null;
+        }
+
+        private static string? GetLogoutAreaId(JsonElement step)
+        {
+            if (!step.TryGetProperty("parts", out JsonElement parts) ||
+                parts.ValueKind != JsonValueKind.Array)
+            {
+                return null;
+            }
+
+            foreach (JsonElement part in parts.EnumerateArray())
+            {
+                if (part.ValueKind == JsonValueKind.Object &&
+                    GetString(part, "type") == "logout")
+                {
+                    return GetString(part, "areaId");
+                }
+            }
+
+            return null;
+        }
+
+        private static List<string> GetWaypointDestinations(JsonElement step)
+        {
+            var destinations = new List<string>();
+            CollectWaypointDestinations(step, destinations);
+            return destinations;
+        }
+
+        private static void CollectWaypointDestinations(
+            JsonElement step, List<string> destinations)
+        {
+            if (step.TryGetProperty("parts", out JsonElement parts) &&
+                parts.ValueKind == JsonValueKind.Array)
+            {
+                foreach (JsonElement part in parts.EnumerateArray())
+                {
+                    if (part.ValueKind != JsonValueKind.Object ||
+                        GetString(part, "type") != "waypoint_use")
+                    {
+                        continue;
+                    }
+
+                    string? destination = GetString(part, "dstAreaId");
+
+                    if (!string.IsNullOrWhiteSpace(destination) &&
+                        !destinations.Contains(
+                            destination,
+                            StringComparer.OrdinalIgnoreCase))
+                    {
+                        destinations.Add(destination);
+                    }
+                }
+            }
+
+            if (step.TryGetProperty("subSteps", out JsonElement subSteps) &&
+                subSteps.ValueKind == JsonValueKind.Array)
+            {
+                foreach (JsonElement subStep in subSteps.EnumerateArray())
+                    CollectWaypointDestinations(subStep, destinations);
+            }
         }
 
         private async Task MonitorClientLogAsync(
@@ -417,8 +688,49 @@ namespace MyPoeOverlay
 
         private void AdvanceForArea(string enteredAreaName)
         {
+            if (_currentStepIndex >= _steps.Count)
+                return;
+
+            List<string> actNames = _steps
+                .Select(step => step.ActName)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            int currentActOrder = actNames.FindIndex(actName =>
+                string.Equals(
+                    actName,
+                    _steps[_currentStepIndex].ActName,
+                    StringComparison.OrdinalIgnoreCase));
+
+            var firstAreaStepByAct = _steps
+                .Select((step, index) => new { step.ActName, step.EnterAreaId, Index = index })
+                .Where(step => step.EnterAreaId != null)
+                .GroupBy(step => step.ActName, StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(
+                    group => group.Key,
+                    group => group.First().Index,
+                    StringComparer.OrdinalIgnoreCase);
+
             for (int i = _currentStepIndex; i < _steps.Count; i++)
             {
+                int candidateActOrder = actNames.FindIndex(actName =>
+                    string.Equals(
+                        actName,
+                        _steps[i].ActName,
+                        StringComparison.OrdinalIgnoreCase));
+
+                if (candidateActOrder > currentActOrder + 1)
+                    continue;
+
+                if (candidateActOrder == currentActOrder + 1 &&
+                    (!firstAreaStepByAct.TryGetValue(
+                        _steps[i].ActName,
+                        out int firstAreaStepIndex) ||
+                     i != firstAreaStepIndex))
+                {
+                    continue;
+                }
+
                 string? areaId = _steps[i].EnterAreaId;
 
                 if (areaId == null)
@@ -443,11 +755,12 @@ namespace MyPoeOverlay
 
                 if (_currentStepIndex < _steps.Count)
                 {
-                    ActComboBox.SelectedItem =
-                        _steps[_currentStepIndex].ActName;
+                    SelectActForCurrentStep(
+                        _steps[_currentStepIndex].ActName);
                 }
 
                 UpdateOverlay();
+                ScrollObjectivesToTop();
                 return;
                 }
             }
@@ -464,9 +777,9 @@ namespace MyPoeOverlay
                 return;
             }
 
-            bool routeComplete = _currentStepIndex >= _steps.Count;    
+            bool routeComplete = _currentStepIndex >= _steps.Count;
 
-            string? selectedAct = ActComboBox.SelectedItem as string;
+            string? selectedAct = ActComboBox.SelectedValue as string;
 
             if (string.IsNullOrWhiteSpace(selectedAct))
                 selectedAct = _steps[0].ActName;
@@ -485,29 +798,152 @@ namespace MyPoeOverlay
             ProgressText.Text = routeComplete
                 ? $"{selectedAct} • {actSteps.Count}/{actSteps.Count} tasks complete • Route complete!"
                 : $"{selectedAct} • {completedCount}/{actSteps.Count} tasks complete";
+
             double fontSize = FontSizeSlider.Value;
+            double subObjectiveFontSize = Math.Max(10, fontSize - 2);
+            var objectiveGroups =
+                new List<(int FirstIndex, int MainIndex, string Title, string Details,
+                    List<(int Index, RouteStep Step)> SubObjectives)>();
+            var leadingSubObjectives =
+                new List<(int Index, RouteStep Step)>();
+            (int FirstIndex, int MainIndex, string Title, string Details,
+                List<(int Index, RouteStep Step)> SubObjectives)? currentGroup = null;
 
-            var objectives = actSteps.Select(x =>
+            foreach (var item in actSteps)
             {
-                bool completed = routeComplete || x.Index < _currentStepIndex;
-                bool current = !routeComplete && x.Index == _currentStepIndex;
+                if (item.Step.EnterAreaId != null)
+                {
+                    if (currentGroup.HasValue)
+                        objectiveGroups.Add(currentGroup.Value);
 
-                string description = x.Step.Description;
+                    string title = _areaNames.TryGetValue(
+                        item.Step.EnterAreaId,
+                        out string? areaName)
+                        ? areaName
+                        : item.Step.Description;
 
-                if (!string.IsNullOrWhiteSpace(x.Step.Details))
-                    description += "\n" + x.Step.Details;
+                    currentGroup = (
+                        item.Index,
+                        item.Index,
+                        title,
+                        item.Step.Details,
+                        leadingSubObjectives);
+                    leadingSubObjectives = new();
+                    continue;
+                }
 
-                return new ObjectiveDisplay(
-                    completed ? "✓" : current ? "●" : "○",
-                    completed ? Brushes.LightGreen
-                        : current ? Brushes.Gold : Brushes.Gray,
-                    description,
-                    completed ? Brushes.LightGreen
-                        : current ? Brushes.White : Brushes.LightGray,
-                    fontSize);
-            }).ToList();
+                if (currentGroup.HasValue)
+                {
+                    var group = currentGroup.Value;
+                    group.SubObjectives.Add((item.Index, item.Step));
+                    currentGroup = (
+                        group.FirstIndex,
+                        item.Index,
+                        group.Title,
+                        group.Details,
+                        group.SubObjectives);
+                }
+                else
+                {
+                    leadingSubObjectives.Add((item.Index, item.Step));
+                }
+            }
+
+            if (currentGroup.HasValue)
+                objectiveGroups.Add(currentGroup.Value);
+
+            if (leadingSubObjectives.Count > 0)
+            {
+                objectiveGroups.Add((
+                    leadingSubObjectives[0].Index,
+                    leadingSubObjectives[^1].Index,
+                    "Act Objectives",
+                    "",
+                    leadingSubObjectives));
+            }
+
+            int currentGroupIndex = objectiveGroups.FindIndex(group =>
+                _currentStepIndex >= group.FirstIndex &&
+                _currentStepIndex <= group.MainIndex);
+
+            if (routeComplete)
+            {
+                currentGroupIndex = objectiveGroups.Count - 1;
+            }
+            else if (currentGroupIndex < 0)
+            {
+                currentGroupIndex = objectiveGroups.FindLastIndex(group =>
+                    group.MainIndex < _currentStepIndex);
+                if (currentGroupIndex < 0)
+                    currentGroupIndex = 0;
+            }
+
+            const int visibleObjectiveCount = 10;
+            const int previousObjectiveCount = 1;
+            int lastStartIndex = Math.Max(
+                0, objectiveGroups.Count - visibleObjectiveCount);
+            int startIndex = Math.Clamp(
+                currentGroupIndex - previousObjectiveCount,
+                0,
+                lastStartIndex);
+
+            var objectives = objectiveGroups
+                .Skip(startIndex)
+                .Take(visibleObjectiveCount)
+                .Select(group =>
+                {
+                    bool completed = routeComplete ||
+                        group.MainIndex < _currentStepIndex;
+                    bool current = !routeComplete &&
+                        _currentStepIndex >= group.FirstIndex &&
+                        _currentStepIndex <= group.MainIndex;
+
+                    var subObjectives = group.SubObjectives
+                        .Select(item =>
+                        {
+                            bool subCompleted =
+                                routeComplete ||
+                                item.Index < _currentStepIndex;
+                            bool subCurrent = !routeComplete &&
+                                item.Index == _currentStepIndex;
+                            string description = item.Step.Description;
+
+                            if (!string.IsNullOrWhiteSpace(item.Step.Details))
+                                description += "\n" + item.Step.Details;
+
+                            return new MiniObjectiveDisplay(
+                                subCompleted ? "✓" : subCurrent ? "●" : "○",
+                                subCompleted ? Brushes.LightGreen
+                                    : subCurrent ? Brushes.Gold : Brushes.Gray,
+                                description,
+                                subCompleted ? Brushes.LightGreen
+                                    : subCurrent ? Brushes.White : Brushes.LightGray,
+                                subObjectiveFontSize);
+                        })
+                        .ToList();
+
+                    return new ObjectiveDisplay(
+                        completed ? "✓" : current ? "●" : "○",
+                        completed ? Brushes.LightGreen
+                            : current ? Brushes.Gold : Brushes.Gray,
+                        group.Title,
+                        completed ? Brushes.LightGreen
+                            : current ? Brushes.White : Brushes.LightGray,
+                        current ? Brushes.Gold : Brushes.Gray,
+                        fontSize,
+                        group.Details,
+                        subObjectives);
+                })
+                .ToList();
 
             ObjectiveList.ItemsSource = objectives;
+        }
+
+        private void ScrollObjectivesToTop()
+        {
+            Dispatcher.BeginInvoke(
+                DispatcherPriority.Loaded,
+                new Action(ObjectiveScrollViewer.ScrollToTop));
         }
 
 
@@ -520,7 +956,7 @@ namespace MyPoeOverlay
 
             _currentStepIndex--;
 
-            ActComboBox.SelectedItem = _steps[_currentStepIndex].ActName;
+            SelectActForCurrentStep(_steps[_currentStepIndex].ActName);
 
             UpdateOverlay();
         }
@@ -537,12 +973,13 @@ namespace MyPoeOverlay
 
             if (_currentStepIndex < _steps.Count)
             {
-                ActComboBox.SelectedItem = _steps[_currentStepIndex].ActName;
+                SelectActForCurrentStep(
+                    _steps[_currentStepIndex].ActName);
             }
-
             UpdateOverlay();
         }
             
+
 
         private void ResizeThumb_DragDelta(
             object sender,
@@ -617,6 +1054,8 @@ namespace MyPoeOverlay
 
             _sessionHistory.Add(_currentSession);
             _timerManuallyStopped = false;
+            _preparedActName = null;
+            _timerWaitingForArea = false;
 
             StartActTimer(actName);
         }
@@ -691,8 +1130,10 @@ namespace MyPoeOverlay
 
             _currentSession = null;
             _timedActName = null;
+            _preparedActName = null;
             _elapsedBeforeStart = TimeSpan.Zero;
             _timerPaused = false;
+            _timerWaitingForArea = false;
 
             _actStopwatch.Reset();
             _timerUi.Stop();
@@ -720,7 +1161,10 @@ namespace MyPoeOverlay
             if (_currentSession == null ||
                 string.IsNullOrWhiteSpace(_timedActName))
             {
-                TimerActText.Text = "Waiting for Act 1";
+                string waitingAct = _preparedActName
+                    ?? _steps.FirstOrDefault()?.ActName
+                    ?? "route";
+                TimerActText.Text = $"Waiting for {waitingAct}";
 
                 if (!_timerManuallyStopped)
                     TimerStatusText.Text = "WAITING";
@@ -747,6 +1191,7 @@ namespace MyPoeOverlay
             if (_currentSession != null && _timerPaused)
             {
                 _timerPaused = false;
+                _timerWaitingForArea = false;
                 _actStopwatch.Start();
                 _timerUi.Start();
                 UpdateTimerDisplay();
@@ -760,7 +1205,7 @@ namespace MyPoeOverlay
             // Pornire manuală opțională.
             // În mod normal, timerul pornește automat la intrarea
             // detectată în Actul 1.
-            string? selectedAct = ActComboBox.SelectedItem as string;
+            string? selectedAct = ActComboBox.SelectedValue as string;
 
             if (!string.IsNullOrWhiteSpace(selectedAct))
                 StartNewSession(selectedAct);
@@ -775,6 +1220,7 @@ namespace MyPoeOverlay
             _elapsedBeforeStart = GetCurrentElapsed();
             _actStopwatch.Reset();
             _timerPaused = true;
+            _timerWaitingForArea = false;
 
             SaveCurrentActElapsed();
             SaveTimerHistory();
@@ -793,11 +1239,62 @@ namespace MyPoeOverlay
             FinishSession(completed: false);
         }
 
-        
+        private void ClearActTimesButton_Click(
+            object sender, RoutedEventArgs e)
+        {
+            if (sender is not System.Windows.Controls.Button button ||
+                button.Tag is not string actName)
+            {
+                return;
+            }
+
+            MessageBoxResult confirmation = MessageBox.Show(
+                this,
+                $"Delete all saved times for {actName} from every run?",
+                "Clear act times",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (confirmation != MessageBoxResult.Yes)
+                return;
+
+            foreach (LevelingSession session in _sessionHistory)
+            {
+                session.ActTimesSeconds.Remove(actName);
+                session.CompletedActs.RemoveAll(completedAct =>
+                    string.Equals(
+                        completedAct,
+                        actName,
+                        StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (_currentSession != null &&
+                string.Equals(
+                    _timedActName,
+                    actName,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                bool wasRunning = !_timerPaused && !_timerWaitingForArea;
+                _elapsedBeforeStart = TimeSpan.Zero;
+                _actStopwatch.Reset();
+
+                if (wasRunning)
+                    _actStopwatch.Start();
+            }
+
+            SaveTimerHistory();
+            UpdateTimerDisplay();
+            UpdateActTimesDisplay();
+        }
+
+
         private void HandleTimerAreaMatch(
             string matchedActName,
             bool routeComplete)
         {
+            if (_steps.Count == 0)
+                return;
+
             string firstActName = _steps[0].ActName;
 
             if (_currentSession == null)
@@ -805,15 +1302,31 @@ namespace MyPoeOverlay
                 if (_timerManuallyStopped)
                     return;
 
+                string targetActName =
+                    _preparedActName ?? firstActName;
+
                 if (!string.Equals(
                     matchedActName,
-                    firstActName,
+                    targetActName,
                     StringComparison.OrdinalIgnoreCase))
                 {
                     return;
                 }
 
-                StartNewSession(firstActName);
+                StartNewSession(targetActName);
+            }
+            else if (_timerWaitingForArea &&
+                string.Equals(
+                    _timedActName,
+                    matchedActName,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                _timerWaitingForArea = false;
+                _timerPaused = false;
+                _actStopwatch.Start();
+                _timerUi.Start();
+                UpdateTimerDisplay();
+                UpdateActTimesDisplay();
             }
             else if (!string.Equals(
                 _timedActName,
@@ -1108,7 +1621,23 @@ namespace MyPoeOverlay
             ActTimesGrid.ItemsSource = rows;
         }
 
+        protected override void OnPreviewMouseMove(
+            MouseEventArgs e)
+        {
+            base.OnPreviewMouseMove(e);
 
+            if (e.LeftButton != MouseButtonState.Pressed)
+                return;
+
+            if (e.OriginalSource is System.Windows.Controls.Button)
+                return;
+
+            if (e.OriginalSource is System.Windows.Controls.Slider)
+                return;
+
+            // Permite tragerea ferestrei, nu resize-ul.
+            // Resize-ul propriu-zis va fi gestionat de Thumb.
+        }
 
 
 
@@ -1122,9 +1651,24 @@ namespace MyPoeOverlay
         private sealed record ObjectiveDisplay(
             string Marker,
             Brush MarkerBrush,
+            string Title,
+            Brush TextBrush,
+            Brush BorderBrush,
+            double FontSize,
+            string Details,
+            IReadOnlyList<MiniObjectiveDisplay> SubObjectives);
+
+
+        private sealed record MiniObjectiveDisplay(
+            string Marker,
+            Brush MarkerBrush,
             string Description,
             Brush TextBrush,
             double FontSize);
+
+        private sealed record ActChoice(
+            string ActName,
+            string DisplayName);
 
 
 
@@ -1184,7 +1728,12 @@ namespace MyPoeOverlay
                                 Math.Clamp(settings.OpacityPercent, 35, 100);
 
                             FontSizeSlider.Value =
-                                Math.Clamp(settings.FontSize, 10, 24);
+                                Math.Clamp(
+                                    Math.Round(
+                                        settings.FontSize,
+                                        MidpointRounding.AwayFromZero),
+                                    10,
+                                    24);
 
                             Width = Math.Max(MinWidth, settings.WindowWidth);
                             Height = Math.Max(MinHeight, settings.WindowHeight);

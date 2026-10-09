@@ -5,6 +5,18 @@
             {
                 "type": "fragment_step",
                 "parts": [
+                    "➞ ",
+                    {
+                        "type": "enter",
+                        "areaId": "1_1_1"
+                    }
+                ],
+                "subSteps": [],
+                "edgeIndex": null
+            },
+            {
+                "type": "fragment_step",
+                "parts": [
                     "Find and kill ",
                     {
                         "type": "kill",
@@ -29,10 +41,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a1q1",
+                        "npcName": "Tarkleigh",
                         "rewardOffers": [
                             "a1q1"
                         ]
@@ -205,10 +218,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a1q4",
+                        "npcName": "Tarkleigh",
                         "rewardOffers": [
                             "a1q4",
                             "a1q4b"
@@ -221,10 +235,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a1q5",
+                        "npcName": "Nessa",
                         "rewardOffers": [
                             "a1q5",
                             "a1q5b"
@@ -245,6 +260,18 @@
                 ],
                 "subSteps": [],
                 "edgeIndex": 8
+            },
+            {
+                "type": "fragment_step",
+                "parts": [
+                    "➞ ",
+                    {
+                        "type": "enter",
+                        "areaId": "1_1_4_1"
+                    }
+                ],
+                "subSteps": [],
+                "edgeIndex": null
             },
             {
                 "type": "fragment_step",
@@ -364,10 +391,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a1q7",
+                        "npcName": "Tarkleigh",
                         "rewardOffers": [
                             "a1q7"
                         ]
@@ -379,10 +407,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a1q2",
+                        "npcName": "Nessa",
                         "rewardOffers": [
                             "a1q2b"
                         ]
@@ -442,83 +471,6 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Find ",
-                    {
-                        "type": "generic",
-                        "value": "Chemist's Strongbox"
-                    }
-                ],
-                "subSteps": [
-                    {
-                        "type": "fragment_step",
-                        "parts": [
-                            "Look for map icon, access with nearby switch"
-                        ],
-                        "subSteps": [],
-                        "edgeIndex": null
-                    },
-                    {
-                        "type": "fragment_step",
-                        "parts": [
-                            "High chance for ",
-                            {
-                                "type": "generic",
-                                "value": "Quicksilver Flask"
-                            }
-                        ],
-                        "subSteps": [],
-                        "edgeIndex": null
-                    },
-                    {
-                        "type": "fragment_step",
-                        "parts": [
-                            "Vendor ",
-                            {
-                                "type": "generic",
-                                "value": "Quicksilver Flask"
-                            },
-                            " + ",
-                            {
-                                "type": "generic",
-                                "value": "Orb of Augmentation"
-                            },
-                            " + Normal ",
-                            {
-                                "type": "generic",
-                                "value": "Boots"
-                            }
-                        ],
-                        "subSteps": [],
-                        "edgeIndex": null
-                    },
-                    {
-                        "type": "fragment_step",
-                        "parts": [
-                            "Vendor ",
-                            {
-                                "type": "generic",
-                                "value": "Quicksilver Flask"
-                            },
-                            " + ",
-                            {
-                                "type": "generic",
-                                "value": "Orb of Augmentation"
-                            },
-                            " + Movement Speed ",
-                            {
-                                "type": "generic",
-                                "value": "Boots"
-                            }
-                        ],
-                        "subSteps": [],
-                        "edgeIndex": null
-                    }
-                ],
-                "edgeIndex": null
-            },
-            {
-                "type": "fragment_step",
-                "parts": [
                     "➞ ",
                     {
                         "type": "arena",
@@ -556,10 +508,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a1q2",
+                        "npcName": "Tarkleigh",
                         "rewardOffers": [
                             "a1q2"
                         ]
@@ -645,10 +598,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a1q6",
+                        "npcName": "Bestel",
                         "rewardOffers": [
                             "a1q6"
                         ]
@@ -660,10 +614,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a1q3",
+                        "npcName": "Nessa",
                         "rewardOffers": [
                             "a1q3"
                         ]
@@ -796,12 +751,7 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Find ",
-                    {
-                        "type": "area",
-                        "areaId": "1_2_2a"
-                    },
-                    ", place ",
+                    "Find The Den, place ",
                     {
                         "type": "portal_set"
                     }
@@ -901,10 +851,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a2q10",
+                        "npcName": "Yeena",
                         "rewardOffers": [
                             "a2q10"
                         ]
@@ -1033,10 +984,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a2q6",
+                        "npcName": "Greust",
                         "rewardOffers": [
                             "a2q6"
                         ]
@@ -1157,10 +1109,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a2q5",
+                        "npcName": "Yeena",
                         "rewardOffers": [
                             "a2q5"
                         ]
@@ -1341,10 +1294,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a2q4",
+                        "npcName": "Silk",
                         "rewardOffers": [
                             "a2q4"
                         ]
@@ -1609,10 +1563,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a1q9",
+                        "npcName": "Bestel",
                         "rewardOffers": [
                             "a1q9"
                         ]
@@ -1939,10 +1894,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a3q1",
+                        "npcName": "Maramoa",
                         "rewardOffers": [
                             "a3q1"
                         ]
@@ -2106,10 +2062,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a3q11",
+                        "npcName": "Hargan",
                         "rewardOffers": [
                             "a3q11"
                         ]
@@ -2347,10 +2304,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a3q4",
+                        "npcName": "Lady Dialla",
                         "rewardOffers": [
                             "a3q4"
                         ]
@@ -2362,10 +2320,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a3q5",
+                        "npcName": "Lady Dialla",
                         "rewardOffers": [
                             "a3q5"
                         ]
@@ -2551,10 +2510,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a3q9",
+                        "npcName": "Grigor",
                         "rewardOffers": [
                             "a3q9"
                         ]
@@ -2566,10 +2526,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a3q8",
+                        "npcName": "Maramoa",
                         "rewardOffers": [
                             "a3q8"
                         ]
@@ -2672,176 +2633,6 @@
                 ],
                 "subSteps": [],
                 "edgeIndex": null
-            },
-            {
-                "type": "fragment_step",
-                "parts": [
-                    {
-                        "type": "logout",
-                        "areaId": "1_3_town"
-                    }
-                ],
-                "subSteps": [],
-                "edgeIndex": 83
-            },
-            {
-                "type": "fragment_step",
-                "parts": [
-                    {
-                        "type": "waypoint_use",
-                        "dstAreaId": "1_3_15",
-                        "srcAreaId": "1_3_town"
-                    }
-                ],
-                "subSteps": [],
-                "edgeIndex": 84
-            },
-            {
-                "type": "fragment_step",
-                "parts": [
-                    "➞ ",
-                    {
-                        "type": "enter",
-                        "areaId": "1_3_17_1"
-                    }
-                ],
-                "subSteps": [
-                    {
-                        "type": "fragment_step",
-                        "parts": [
-                            "Go ",
-                            {
-                                "type": "dir",
-                                "dirIndex": 7
-                            }
-                        ],
-                        "subSteps": [],
-                        "edgeIndex": null
-                    }
-                ],
-                "edgeIndex": 85
-            },
-            {
-                "type": "fragment_step",
-                "parts": [
-                    "Get ",
-                    {
-                        "type": "waypoint_get"
-                    }
-                ],
-                "subSteps": [],
-                "edgeIndex": null
-            },
-            {
-                "type": "fragment_step",
-                "parts": [
-                    "Find ",
-                    {
-                        "type": "generic",
-                        "value": "Loose Candle"
-                    },
-                    " ➞ ",
-                    {
-                        "type": "enter",
-                        "areaId": "1_3_17_2"
-                    }
-                ],
-                "subSteps": [
-                    {
-                        "type": "fragment_step",
-                        "parts": [
-                            "Look for a candle in a narrow corridor"
-                        ],
-                        "subSteps": [],
-                        "edgeIndex": null
-                    }
-                ],
-                "edgeIndex": 86
-            },
-            {
-                "type": "fragment_step",
-                "parts": [
-                    "Get ",
-                    {
-                        "type": "crafting",
-                        "crafting_recipes": [
-                            "Life and Mana Regeneration - Rank 1"
-                        ]
-                    }
-                ],
-                "subSteps": [],
-                "edgeIndex": null
-            },
-            {
-                "type": "fragment_step",
-                "parts": [
-                    "Find 4x",
-                    {
-                        "type": "quest_text",
-                        "value": "Golden Page"
-                    }
-                ],
-                "subSteps": [],
-                "edgeIndex": null
-            },
-            {
-                "type": "fragment_step",
-                "parts": [
-                    {
-                        "type": "logout",
-                        "areaId": "1_3_town"
-                    }
-                ],
-                "subSteps": [],
-                "edgeIndex": 87
-            },
-            {
-                "type": "fragment_step",
-                "parts": [
-                    {
-                        "type": "waypoint_use",
-                        "dstAreaId": "1_3_17_1",
-                        "srcAreaId": "1_3_town"
-                    }
-                ],
-                "subSteps": [
-                    {
-                        "type": "fragment_step",
-                        "parts": [
-                            "Put currency needed to buy skill gems in inventory"
-                        ],
-                        "subSteps": [],
-                        "edgeIndex": null
-                    }
-                ],
-                "edgeIndex": 88
-            },
-            {
-                "type": "fragment_step",
-                "parts": [
-                    "Hand in ",
-                    {
-                        "type": "quest",
-                        "questId": "a3q12",
-                        "rewardOffers": [
-                            "a3q12"
-                        ]
-                    }
-                ],
-                "subSteps": [],
-                "edgeIndex": null
-            },
-            {
-                "type": "fragment_step",
-                "parts": [
-                    {
-                        "type": "waypoint_use",
-                        "dstAreaId": "1_3_15",
-                        "srcAreaId": "1_3_17_1"
-                    }
-                ],
-                "subSteps": [],
-                "edgeIndex": 89
             },
             {
                 "type": "fragment_step",
@@ -3000,10 +2791,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a4q2",
+                        "npcName": "Oyun",
                         "rewardOffers": [
                             "a4q2"
                         ]
@@ -3103,10 +2895,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a4q6",
+                        "npcName": "Tasuni",
                         "rewardOffers": [
                             "a4q6"
                         ]
@@ -3316,7 +3109,8 @@
                 "parts": [
                     {
                         "type": "portal_use",
-                        "dstAreaId": "1_4_town"
+                        "dstAreaId": "1_4_town",
+                        "displayText": "Use portal scroll"
                     }
                 ],
                 "subSteps": [],
@@ -3542,10 +3336,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a4q5",
+                        "npcName": "Lady Dialla",
                         "rewardOffers": []
                     }
                 ],
@@ -3583,10 +3378,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a4q1",
+                        "npcName": "Dialla",
                         "rewardOffers": [
                             "a4q1"
                         ]
@@ -3708,10 +3504,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a5q1b",
+                        "npcName": "Lani",
                         "rewardOffers": [
                             "a5q1b"
                         ]
@@ -3918,10 +3715,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a5q2",
+                        "npcName": "Lani",
                         "rewardOffers": [
                             "a5q2"
                         ]
@@ -3933,10 +3731,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a5q3",
+                        "npcName": "Vilenta",
                         "rewardOffers": [
                             "a5q3"
                         ]
@@ -3948,10 +3747,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a5q4",
+                        "npcName": "Lani",
                         "rewardOffers": [
                             "a5q4"
                         ]
@@ -4169,10 +3969,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a5q7",
+                        "npcName": "Lani",
                         "rewardOffers": [
                             "a5q7"
                         ]
@@ -4303,10 +4104,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a6q4",
+                        "npcName": "Lilly Roth",
                         "rewardOffers": [
                             "a6q4"
                         ]
@@ -4616,10 +4418,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a6q7",
+                        "npcName": "Bestel",
                         "rewardOffers": [
                             "a6q7"
                         ]
@@ -4802,10 +4605,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a6q3",
+                        "npcName": "Tarkleigh",
                         "rewardOffers": [
                             "a6q3"
                         ]
@@ -4817,10 +4621,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a6q2",
+                        "npcName": "Tarkleigh",
                         "rewardOffers": [
                             "a6q2"
                         ]
@@ -4832,10 +4637,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a6q6",
+                        "npcName": "Tarkleigh",
                         "rewardOffers": [
                             "a6q6"
                         ]
@@ -5370,10 +5176,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a7q2",
+                        "npcName": "Helena",
                         "rewardOffers": [
                             "a7q2"
                         ]
@@ -5385,10 +5192,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a7q5",
+                        "npcName": "Weylam Roth",
                         "rewardOffers": [
                             "a7q5"
                         ]
@@ -5412,10 +5220,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a7q3",
+                        "npcName": "Silk",
                         "rewardOffers": [
                             "a7q3"
                         ]
@@ -5711,7 +5520,8 @@
                 "parts": [
                     {
                         "type": "portal_use",
-                        "dstAreaId": "2_7_town"
+                        "dstAreaId": "2_7_town",
+                        "displayText": "Use portal scroll"
                     }
                 ],
                 "subSteps": [],
@@ -5720,10 +5530,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a7q1",
+                        "npcName": "Eramir",
                         "rewardOffers": [
                             "a7q1"
                         ]
@@ -5735,10 +5546,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a7q9",
+                        "npcName": "Eramir",
                         "rewardOffers": [
                             "a7q9"
                         ]
@@ -5750,10 +5562,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a7q6",
+                        "npcName": "Weylam Roth",
                         "rewardOffers": [
                             "a7q6"
                         ]
@@ -5814,10 +5627,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a7q7",
+                        "npcName": "Silk",
                         "rewardOffers": []
                     }
                 ],
@@ -6279,10 +6093,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a8q1",
+                        "npcName": "Hargan",
                         "rewardOffers": [
                             "a8q1"
                         ]
@@ -6294,10 +6109,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a8q7",
+                        "npcName": "Maramoa",
                         "rewardOffers": [
                             "a8q7"
                         ]
@@ -6309,10 +6125,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a8q6",
+                        "npcName": "Clarissa",
                         "rewardOffers": [
                             "a8q6"
                         ]
@@ -6709,10 +6526,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a8q4",
+                        "npcName": "Hargan",
                         "rewardOffers": [
                             "a8q4"
                         ]
@@ -6957,10 +6775,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a9q3",
+                        "npcName": "Petarus and Vanja",
                         "rewardOffers": [
                             "a9q3"
                         ]
@@ -6972,10 +6791,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a9q5",
+                        "npcName": "Petarus and Vanja",
                         "rewardOffers": [
                             "a9q5_offer"
                         ]
@@ -7057,10 +6877,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a9q5",
+                        "npcName": "Irasha",
                         "rewardOffers": [
                             "a9q5"
                         ]
@@ -7256,10 +7077,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a9q2",
+                        "npcName": "Irasha",
                         "rewardOffers": [
                             "a9q2"
                         ]
@@ -7658,10 +7480,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a10q1",
+                        "npcName": "Lani",
                         "rewardOffers": [
                             "a10q1"
                         ]
@@ -7805,10 +7628,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a10q6",
+                        "npcName": "Lani",
                         "rewardOffers": [
                             "a10q6"
                         ]
@@ -7988,10 +7812,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a10q2",
+                        "npcName": "Lani",
                         "rewardOffers": [
                             "a10q2"
                         ]
@@ -8163,10 +7988,11 @@
             {
                 "type": "fragment_step",
                 "parts": [
-                    "Hand in ",
+                    "Hand in to ",
                     {
                         "type": "quest",
                         "questId": "a10q3",
+                        "npcName": "Lani",
                         "rewardOffers": [
                             "a10q3"
                         ]
