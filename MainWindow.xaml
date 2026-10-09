@@ -616,8 +616,8 @@
                           SelectionChanged="ActComboBox_SelectionChanged">
                     <ComboBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ComboBoxItem}">
-                            <Setter Property="Height" Value="34"/>
-                            <Setter Property="Padding" Value="8,4"/>
+                            <Setter Property="Height" Value="30"/>
+                            <Setter Property="Padding" Value="0"/>
                             <Setter Property="HorizontalContentAlignment" Value="Center"/>
                             <Setter Property="VerticalContentAlignment" Value="Center"/>
                             <Setter Property="FontSize" Value="14"/>
@@ -631,7 +631,7 @@
                                                 Background="{TemplateBinding Background}"
                                                 SnapsToDevicePixels="True">
                                             <ContentPresenter
-                                                              Margin="{TemplateBinding Padding}"
+                                                              Margin="0"
                                                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                                               RecognizesAccessKey="True"/>
@@ -707,10 +707,12 @@
                                     <Border Background="{TemplateBinding Background}"
                                             BorderBrush="{TemplateBinding BorderBrush}"
                                             BorderThickness="{TemplateBinding BorderThickness}"
-                                            CornerRadius="5">
+                                            CornerRadius="5"
+                                            Padding="0">
                                         <ScrollViewer MaxHeight="300"
-                                                      CanContentScroll="True">
-                                            <ItemsPresenter/>
+                                                      CanContentScroll="True"
+                                                      Padding="0">
+                                            <ItemsPresenter Margin="0"/>
                                         </ScrollViewer>
                                     </Border>
                                 </Popup>
