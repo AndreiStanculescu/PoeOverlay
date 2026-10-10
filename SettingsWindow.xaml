@@ -1,0 +1,69 @@
+<Window x:Class="MyPoeOverlay.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Overlay Settings"
+        Width="500"
+        Height="620"
+        MinWidth="420"
+        MinHeight="480"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        Topmost="True"
+        ShowInTaskbar="False">
+    <Border Background="#F0151518"
+            BorderBrush="#FF494949"
+            BorderThickness="1"
+            CornerRadius="12"
+            Padding="12">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0"
+                  Margin="0,0,0,8"
+                  MouseLeftButtonDown="Header_MouseLeftButtonDown">
+                <TextBlock Text="OVERLAY SETTINGS"
+                           Foreground="#FFFFCC00"
+                           FontSize="13"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"/>
+                <Button Content="✕"
+                        Width="28"
+                        Height="28"
+                        HorizontalAlignment="Right"
+                        Background="Transparent"
+                        Foreground="#FFAAAAAA"
+                        BorderThickness="0"
+                        FontSize="16"
+                        Click="HideButton_Click"
+                        Cursor="Hand"/>
+            </Grid>
+            <Grid x:Name="SettingsContentHost"
+                  Grid.Row="1"
+                  Margin="4,4,24,24"/>
+            <Thumb Grid.Row="1"
+                   Width="24"
+                   Height="24"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Bottom"
+                   Cursor="SizeNWSE"
+                   Background="Transparent"
+                   DragDelta="ResizeThumb_DragDelta">
+                <Thumb.Template>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Grid Background="Transparent">
+                            <TextBlock Text="◢"
+                                       Foreground="#FFAAAAAA"
+                                       FontSize="18"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Bottom"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Thumb.Template>
+            </Thumb>
+        </Grid>
+    </Border>
+</Window>
