@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,8 @@ namespace MyPoeOverlay
 {
     public partial class MainWindow : Window
     {
+        private const int MaxAutomaticTaskSkip = 2;
+
         private readonly List<RouteStep> _steps = new();
         private List<ActChoice> _actChoices = new();
         private readonly Dictionary<string, string> _areaNames =
@@ -29,19 +32,29 @@ namespace MyPoeOverlay
         private readonly DispatcherTimer _timerUi = new();
         private readonly List<LevelingSession> _sessionHistory = new();
 
+        private TimerWindow? _timerWindow;
+        private SettingsWindow? _settingsWindow;
         private LevelingSession? _currentSession;
         private string? _timedActName;
         private string? _preparedActName;
 
         private TimeSpan _elapsedBeforeStart = TimeSpan.Zero;
+        private TimeSpan _preparedElapsed = TimeSpan.Zero;
         private DateTime _lastTimerSaveUtc = DateTime.MinValue;
 
         private bool _timerPaused;
         private bool _timerManuallyStopped;
         private bool _timerWaitingForArea;
+        private bool _lastSessionCompleted;
 
         private bool _isLoadingSettings;
         private bool _isUpdatingActSelection;
+        private bool _isClosing;
+
+        private double _timerWindowWidth = 320;
+        private double _timerWindowHeight = 280;
+        private double _timerWindowLeft = 520;
+        private double _timerWindowTop = 100;
 
         private string SettingsPath => Path.Combine(
             Environment.GetFolderPath(
@@ -68,6 +81,8 @@ namespace MyPoeOverlay
 
             Closed += (_, _) =>
             {
+                _isClosing = true;
+
                 if (_currentSession != null)
                 {
                     SaveCurrentActElapsed();
@@ -80,6 +95,8 @@ namespace MyPoeOverlay
 
                 SaveSettings();
 
+                _settingsWindow?.Close();
+                _timerWindow?.CloseFromMainWindow();
                 _timerUi.Stop();
                 _cancellation.Cancel();
             };
@@ -104,10 +121,132 @@ namespace MyPoeOverlay
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            SettingsPanel.Visibility =
-                SettingsPanel.Visibility == Visibility.Visible
-                    ? Visibility.Collapsed
-                    : Visibility.Visible;
+            CreateSettingsWindow();
+
+            if (_settingsWindow == null)
+                throw new InvalidOperationException(
+                    "The settings window could not be created.");
+
+            if (_settingsWindow.IsVisible)
+            {
+                _settingsWindow.Hide();
+                return;
+            }
+
+            _settingsWindow.Show();
+            _settingsWindow.Activate();
+        }
+
+        private void CreateSettingsWindow()
+        {
+            if (_settingsWindow != null)
+                return;
+
+            if (SettingsPanel.Parent is not System.Windows.Controls.Grid parentGrid)
+            {
+                throw new InvalidOperationException(
+                    "The settings panel is not attached to the overlay.");
+            }
+
+            parentGrid.Children.Remove(SettingsPanel);
+            SettingsPanel.Visibility = Visibility.Visible;
+
+            _settingsWindow = new SettingsWindow
+            {
+                Owner = this
+            };
+            _settingsWindow.SetContent(SettingsPanel);
+            _settingsWindow.Closing += (_, e) =>
+            {
+                if (!_isClosing)
+                {
+                    e.Cancel = true;
+                    _settingsWindow.Hide();
+                }
+            };
+        }
+
+        private void ShowTimerWindowButton_Click(
+            object sender,
+            RoutedEventArgs e)
+        {
+            CreateTimerWindow();
+
+            if (_timerWindow == null)
+                throw new InvalidOperationException(
+                    "The timer window could not be created.");
+
+            if (_timerWindow.IsVisible)
+            {
+                _timerWindow.Hide();
+                return;
+            }
+
+            _timerWindow.Show();
+            _timerWindow.Activate();
+        }
+
+        private void CreateTimerWindow()
+        {
+            if (_timerWindow != null)
+                return;
+
+            _timerWindow = new TimerWindow
+            {
+                Width = Math.Max(280, _timerWindowWidth),
+                Height = Math.Max(250, _timerWindowHeight),
+                Left = _timerWindowLeft,
+                Top = _timerWindowTop,
+                Owner = this
+            };
+
+            _timerWindow.StartRequested += StartTimerForAct;
+            _timerWindow.SetElapsedRequested += SetTimerElapsed;
+            _timerWindow.PauseRequested += PauseTimer;
+            _timerWindow.StopRequested += StopTimer;
+            _timerWindow.ActSelectionChanged += SelectActFromTimer;
+            _timerWindow.LocationChanged += (_, _) => SaveTimerWindowSettings();
+            _timerWindow.SizeChanged += (_, _) => SaveTimerWindowSettings();
+            _timerWindow.Closed += (_, _) =>
+            {
+                _timerWindow = null;
+                SaveTimerWindowSettings();
+            };
+
+            ApplyTimerAppearance();
+        }
+
+        private void SelectActFromTimer(string actName)
+        {
+            if (_steps.Count == 0 ||
+                string.Equals(
+                    ActComboBox.SelectedValue as string,
+                    actName,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            ActComboBox.SelectedValue = actName;
+        }
+
+        private void ApplyTimerAppearance()
+        {
+            _timerWindow?.SetAppearance(
+                TimerOpacitySlider.Value / 100.0,
+                TimerFontSizeSlider.Value);
+        }
+
+        private void SaveTimerWindowSettings()
+        {
+            if (_timerWindow == null || _isClosing)
+                return;
+
+            _timerWindowWidth = _timerWindow.Width;
+            _timerWindowHeight = _timerWindow.Height;
+            _timerWindowLeft = _timerWindow.Left;
+            _timerWindowTop = _timerWindow.Top;
+            SaveSettings();
         }
 
         private void OpacitySlider_ValueChanged(
@@ -122,6 +261,21 @@ namespace MyPoeOverlay
             this.Opacity = opacity;
             OpacityValueText.Text = $"{OpacitySlider.Value:0}%";
 
+            SaveSettings();
+        }
+
+        private void TimerOpacitySlider_ValueChanged(
+            object sender,
+            RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (TimerOpacityValueText == null ||
+                TimerOpacitySlider == null)
+            {
+                return;
+            }
+
+            ApplyTimerAppearance();
+            TimerOpacityValueText.Text = $"{TimerOpacitySlider.Value:0}%";
             SaveSettings();
         }
 
@@ -156,6 +310,31 @@ namespace MyPoeOverlay
             SaveSettings();
         }
 
+        private void TimerFontSizeSlider_ValueChanged(
+            object sender,
+            RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (TimerFontSizeValueText == null ||
+                TimerFontSizeSlider == null)
+            {
+                return;
+            }
+
+            double size = Math.Round(
+                TimerFontSizeSlider.Value,
+                MidpointRounding.AwayFromZero);
+
+            if (TimerFontSizeSlider.Value != size)
+            {
+                TimerFontSizeSlider.Value = size;
+                return;
+            }
+
+            ApplyTimerAppearance();
+            TimerFontSizeValueText.Text = $"{size:0} px";
+            SaveSettings();
+        }
+
 
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -167,10 +346,13 @@ namespace MyPoeOverlay
 
                 LoadAreas();
                 LoadRoute();
+                CreateTimerWindow();
 
                 UpdateTimerDisplay();
                 UpdateOverlay();
                 UpdateActTimesDisplay();
+
+                _timerWindow?.Show();
 
                 string? logPath = FindClientLog();
 
@@ -391,9 +573,17 @@ namespace MyPoeOverlay
 
             if (_currentSession == null)
             {
+                if (!string.Equals(
+                    _preparedActName,
+                    actName,
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    _preparedElapsed = TimeSpan.Zero;
+                }
+
                 _preparedActName = actName;
                 _timedActName = actName;
-                _elapsedBeforeStart = TimeSpan.Zero;
+                _elapsedBeforeStart = _preparedElapsed;
                 _actStopwatch.Reset();
                 _timerPaused = true;
                 _timerWaitingForArea = true;
@@ -711,8 +901,22 @@ namespace MyPoeOverlay
                     group => group.First().Index,
                     StringComparer.OrdinalIgnoreCase);
 
+            int currentTaskOrdinal = _steps
+                .Take(_currentStepIndex + 1)
+                .Count(step => step.EnterAreaId != null) - 1;
+            int candidateTaskOrdinal = _steps
+                .Take(_currentStepIndex)
+                .Count(step => step.EnterAreaId != null) - 1;
+
             for (int i = _currentStepIndex; i < _steps.Count; i++)
             {
+                if (_steps[i].EnterAreaId != null)
+                    candidateTaskOrdinal++;
+
+                if (candidateTaskOrdinal - currentTaskOrdinal >
+                    MaxAutomaticTaskSkip)
+                    break;
+
                 int candidateActOrder = actNames.FindIndex(actName =>
                     string.Equals(
                         actName,
@@ -744,24 +948,24 @@ namespace MyPoeOverlay
                     enteredAreaName,
                     StringComparison.OrdinalIgnoreCase))
                 {
-                string matchedActName = _steps[i].ActName;
+                    string matchedActName = _steps[i].ActName;
 
-                _currentStepIndex = i + 1;
+                    _currentStepIndex = i + 1;
 
-                bool routeComplete = _currentStepIndex >= _steps.Count;
+                    bool routeComplete = _currentStepIndex >= _steps.Count;
 
-                // Pornire și tranziție automată a timerului.
-                HandleTimerAreaMatch(matchedActName, routeComplete);
+                    // Pornire și tranziție automată a timerului.
+                    HandleTimerAreaMatch(matchedActName, routeComplete);
 
-                if (_currentStepIndex < _steps.Count)
-                {
-                    SelectActForCurrentStep(
-                        _steps[_currentStepIndex].ActName);
-                }
+                    if (_currentStepIndex < _steps.Count)
+                    {
+                        SelectActForCurrentStep(
+                            _steps[_currentStepIndex].ActName);
+                    }
 
-                UpdateOverlay();
-                ScrollObjectivesToTop();
-                return;
+                    UpdateOverlay();
+                    ScrollObjectivesToTop();
+                    return;
                 }
             }
         }
@@ -1042,7 +1246,9 @@ namespace MyPoeOverlay
             return _elapsedBeforeStart + _actStopwatch.Elapsed;
         }
 
-        private void StartNewSession(string actName)
+        private void StartNewSession(
+            string actName,
+            TimeSpan initialElapsed = default)
         {
             _currentSession = new LevelingSession
             {
@@ -1054,17 +1260,22 @@ namespace MyPoeOverlay
 
             _sessionHistory.Add(_currentSession);
             _timerManuallyStopped = false;
+            _lastSessionCompleted = false;
             _preparedActName = null;
+            _preparedElapsed = TimeSpan.Zero;
             _timerWaitingForArea = false;
 
-            StartActTimer(actName);
+            StartActTimer(actName, initialElapsed: initialElapsed);
         }
 
 
-        private void StartActTimer(string actName, bool startImmediately = true)
+        private void StartActTimer(
+            string actName,
+            bool startImmediately = true,
+            TimeSpan initialElapsed = default)
         {
             _timedActName = actName;
-            _elapsedBeforeStart = TimeSpan.Zero;
+            _elapsedBeforeStart = initialElapsed;
             _timerPaused = !startImmediately;
 
             _actStopwatch.Reset();
@@ -1131,6 +1342,7 @@ namespace MyPoeOverlay
             _currentSession = null;
             _timedActName = null;
             _preparedActName = null;
+            _preparedElapsed = TimeSpan.Zero;
             _elapsedBeforeStart = TimeSpan.Zero;
             _timerPaused = false;
             _timerWaitingForArea = false;
@@ -1138,25 +1350,19 @@ namespace MyPoeOverlay
             _actStopwatch.Reset();
             _timerUi.Stop();
 
-            TimerStatusText.Text = completed ? "COMPLETED" : "STOPPED";
-            TimerActText.Text = completed
-                ? "Run completed"
-                : "Timer stopped";
-
-            TimerText.Text = "00:00:00";
+            _lastSessionCompleted = completed;
 
             SaveTimerHistory();
+            UpdateTimerDisplay();
             UpdateActTimesDisplay();
         }
 
         private void UpdateTimerDisplay()
         {
-            if (TimerText == null ||
-                TimerActText == null ||
-                TimerStatusText == null)
-            {
-                return;
-            }
+            string actText;
+            string elapsedText;
+            string statusText;
+            string? selectedAct = _timedActName;
 
             if (_currentSession == null ||
                 string.IsNullOrWhiteSpace(_timedActName))
@@ -1164,29 +1370,49 @@ namespace MyPoeOverlay
                 string waitingAct = _preparedActName
                     ?? _steps.FirstOrDefault()?.ActName
                     ?? "route";
-                TimerActText.Text = $"Waiting for {waitingAct}";
+                actText = $"Waiting for {waitingAct}";
+                TimeSpan elapsed = _currentSession == null
+                    ? _preparedElapsed
+                    : _elapsedBeforeStart;
+                elapsedText = $"{(long)elapsed.TotalHours:00}:" +
+                    $"{elapsed.Minutes:00}:{elapsed.Seconds:00}";
 
-                if (!_timerManuallyStopped)
-                    TimerStatusText.Text = "WAITING";
+                statusText = _timerManuallyStopped
+                    ? "STOPPED"
+                    : _lastSessionCompleted
+                        ? "COMPLETED"
+                        : "WAITING";
 
-                TimerText.Text = "00:00:00";
-                return;
+                if (_timerManuallyStopped)
+                    actText = "Timer stopped";
+                else if (_lastSessionCompleted)
+                    actText = "Run completed";
+
+                selectedAct ??= _preparedActName
+                    ?? ActComboBox.SelectedValue as string
+                    ?? _steps.FirstOrDefault()?.ActName;
+            }
+            else
+            {
+                TimeSpan elapsed = GetCurrentElapsed();
+
+                actText = _timedActName;
+                elapsedText = $"{(int)elapsed.TotalHours:00}:" +
+                    $"{elapsed.Minutes:00}:{elapsed.Seconds:00}";
+                statusText = _timerPaused || _timerWaitingForArea
+                    ? "PAUSED"
+                    : "RUNNING";
             }
 
-            TimeSpan elapsed = GetCurrentElapsed();
-
-            TimerActText.Text = _timedActName;
-            TimerText.Text = $"{(int)elapsed.TotalHours:00}:" +
-                            $"{elapsed.Minutes:00}:" +
-                            $"{elapsed.Seconds:00}";
-
-            TimerStatusText.Text = _timerPaused
-                ? "PAUSED"
-                : "RUNNING";
+            _timerWindow?.SetState(
+                _actChoices.Select(choice => choice.ActName),
+                selectedAct,
+                actText,
+                elapsedText,
+                statusText);
         }
 
-        private void StartTimerButton_Click(
-            object sender, RoutedEventArgs e)
+        private void StartTimerForAct(string selectedAct)
         {
             if (_currentSession != null && _timerPaused)
             {
@@ -1202,17 +1428,35 @@ namespace MyPoeOverlay
             if (_currentSession != null)
                 return;
 
-            // Pornire manuală opțională.
-            // În mod normal, timerul pornește automat la intrarea
-            // detectată în Actul 1.
-            string? selectedAct = ActComboBox.SelectedValue as string;
-
             if (!string.IsNullOrWhiteSpace(selectedAct))
-                StartNewSession(selectedAct);
+                StartNewSession(selectedAct, _preparedElapsed);
         }
 
-        private void PauseTimerButton_Click(
-            object sender, RoutedEventArgs e)
+        private void SetTimerElapsed(TimeSpan elapsed)
+        {
+            if (_currentSession == null)
+            {
+                _preparedElapsed = elapsed;
+            }
+            else
+            {
+                bool wasRunning = !_timerPaused && !_timerWaitingForArea;
+
+                _elapsedBeforeStart = elapsed;
+                _actStopwatch.Reset();
+
+                if (wasRunning)
+                    _actStopwatch.Start();
+
+                SaveCurrentActElapsed();
+                SaveTimerHistory();
+            }
+
+            UpdateTimerDisplay();
+            UpdateActTimesDisplay();
+        }
+
+        private void PauseTimer()
         {
             if (_currentSession == null || _timerPaused)
                 return;
@@ -1229,14 +1473,106 @@ namespace MyPoeOverlay
             UpdateActTimesDisplay();
         }
 
-        private void StopTimerButton_Click(
-            object sender, RoutedEventArgs e)
+        private void StopTimer()
         {
             if (_currentSession == null)
                 return;
 
             _timerManuallyStopped = true;
             FinishSession(completed: false);
+        }
+
+        private void ShowActHistoryButton_Click(
+            object sender,
+            RoutedEventArgs e)
+        {
+            if (sender is not System.Windows.Controls.Button button ||
+                button.Tag is not string actName)
+            {
+                return;
+            }
+
+            var records = new ObservableCollection<ActHistoryRecord>(
+                _sessionHistory
+                    .Where(session =>
+                        session.ActTimesSeconds.ContainsKey(actName))
+                    .OrderByDescending(session => session.StartedAt)
+                    .Select(session =>
+                    {
+                        long seconds = session.ActTimesSeconds[actName];
+                        bool isCurrentAct =
+                            ReferenceEquals(session, _currentSession) &&
+                            string.Equals(
+                                _timedActName,
+                                actName,
+                                StringComparison.OrdinalIgnoreCase);
+
+                        if (isCurrentAct)
+                        {
+                            seconds = (long)GetCurrentElapsed().TotalSeconds;
+                        }
+
+                        string status = IsActCompleted(session, actName)
+                            ? "COMPLETED"
+                            : isCurrentAct
+                                ? _timerPaused
+                                    ? "PAUSED"
+                                    : "IN PROGRESS"
+                                : "INCOMPLETE";
+
+                        return new ActHistoryRecord(
+                            session.Id,
+                            session.StartedAt.ToLocalTime()
+                                .ToString("dd MMM yyyy HH:mm"),
+                            FormatDuration(seconds),
+                            status);
+                    }));
+
+            var historyWindow = new ActHistoryWindow(
+                actName,
+                records,
+                sessionId => DeleteActTimeRecord(actName, sessionId))
+            {
+                Owner = this
+            };
+
+            historyWindow.ShowDialog();
+        }
+
+        private void DeleteActTimeRecord(string actName, string sessionId)
+        {
+            LevelingSession? session = _sessionHistory.FirstOrDefault(item =>
+                string.Equals(item.Id, sessionId, StringComparison.Ordinal));
+
+            if (session == null)
+                return;
+
+            session.ActTimesSeconds.Remove(actName);
+            session.CompletedActs.RemoveAll(completedAct =>
+                string.Equals(
+                    completedAct,
+                    actName,
+                    StringComparison.OrdinalIgnoreCase));
+
+            if (ReferenceEquals(session, _currentSession) &&
+                string.Equals(
+                    _timedActName,
+                    actName,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                bool wasRunning = !_timerPaused && !_timerWaitingForArea;
+                _elapsedBeforeStart = TimeSpan.Zero;
+                _actStopwatch.Reset();
+
+                if (wasRunning)
+                    _actStopwatch.Start();
+
+                SaveCurrentActElapsed();
+            }
+
+            SaveTimerHistory();
+            UpdateTimerDisplay();
+            UpdateActTimesDisplay();
         }
 
         private void ClearActTimesButton_Click(
@@ -1247,16 +1583,6 @@ namespace MyPoeOverlay
             {
                 return;
             }
-
-            MessageBoxResult confirmation = MessageBox.Show(
-                this,
-                $"Delete all saved times for {actName} from every run?",
-                "Clear act times",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning);
-
-            if (confirmation != MessageBoxResult.Yes)
-                return;
 
             foreach (LevelingSession session in _sessionHistory)
             {
@@ -1313,7 +1639,7 @@ namespace MyPoeOverlay
                     return;
                 }
 
-                StartNewSession(targetActName);
+                StartNewSession(targetActName, _preparedElapsed);
             }
             else if (_timerWaitingForArea &&
                 string.Equals(
@@ -1365,7 +1691,15 @@ namespace MyPoeOverlay
                     JsonSerializer.Deserialize<List<LevelingSession>>(json);
 
                 if (sessions != null)
-                    _sessionHistory.AddRange(sessions);
+                {
+                    foreach (LevelingSession session in sessions)
+                    {
+                        if (string.IsNullOrWhiteSpace(session.Id))
+                            session.Id = Guid.NewGuid().ToString("N");
+
+                        _sessionHistory.Add(session);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -1699,12 +2033,19 @@ namespace MyPoeOverlay
         {
             public double OpacityPercent { get; set; } = 100;
             public double FontSize { get; set; } = 16;
+            public double? TimerOpacityPercent { get; set; }
+            public double? TimerFontSize { get; set; }
 
             public double WindowWidth { get; set; } = 390;
             public double WindowHeight { get; set; } = 520;
 
             public double WindowLeft { get; set; } = 100;
             public double WindowTop { get; set; } = 100;
+
+            public double TimerWindowWidth { get; set; } = 320;
+            public double TimerWindowHeight { get; set; } = 280;
+            public double TimerWindowLeft { get; set; } = 520;
+            public double TimerWindowTop { get; set; } = 100;
         }
         
         private void LoadSettings()
@@ -1735,11 +2076,32 @@ namespace MyPoeOverlay
                                     10,
                                     24);
 
+                            TimerOpacitySlider.Value = Math.Clamp(
+                                settings.TimerOpacityPercent
+                                    ?? settings.OpacityPercent,
+                                35,
+                                100);
+
+                            TimerFontSizeSlider.Value = Math.Clamp(
+                                Math.Round(
+                                    settings.TimerFontSize
+                                        ?? settings.FontSize,
+                                    MidpointRounding.AwayFromZero),
+                                10,
+                                24);
+
                             Width = Math.Max(MinWidth, settings.WindowWidth);
                             Height = Math.Max(MinHeight, settings.WindowHeight);
 
                             Left = settings.WindowLeft;
                             Top = settings.WindowTop;
+
+                            _timerWindowWidth =
+                                Math.Max(280, settings.TimerWindowWidth);
+                            _timerWindowHeight =
+                                Math.Max(250, settings.TimerWindowHeight);
+                            _timerWindowLeft = settings.TimerWindowLeft;
+                            _timerWindowTop = settings.TimerWindowTop;
                         }
                     }
                 }
@@ -1761,6 +2123,18 @@ namespace MyPoeOverlay
                     new RoutedPropertyChangedEventArgs<double>(
                         FontSizeSlider.Value,
                         FontSizeSlider.Value));
+
+                TimerOpacitySlider_ValueChanged(
+                    TimerOpacitySlider,
+                    new RoutedPropertyChangedEventArgs<double>(
+                        TimerOpacitySlider.Value,
+                        TimerOpacitySlider.Value));
+
+                TimerFontSizeSlider_ValueChanged(
+                    TimerFontSizeSlider,
+                    new RoutedPropertyChangedEventArgs<double>(
+                        TimerFontSizeSlider.Value,
+                        TimerFontSizeSlider.Value));
             }
             finally
             {
@@ -1784,10 +2158,20 @@ namespace MyPoeOverlay
                 {
                     OpacityPercent = OpacitySlider.Value,
                     FontSize = FontSizeSlider.Value,
+                    TimerOpacityPercent = TimerOpacitySlider.Value,
+                    TimerFontSize = TimerFontSizeSlider.Value,
                     WindowWidth = Width,
                     WindowHeight = Height,
                     WindowLeft = Left,
-                    WindowTop = Top
+                    WindowTop = Top,
+                    TimerWindowWidth = _timerWindow?.Width
+                        ?? _timerWindowWidth,
+                    TimerWindowHeight = _timerWindow?.Height
+                        ?? _timerWindowHeight,
+                    TimerWindowLeft = _timerWindow?.Left
+                        ?? _timerWindowLeft,
+                    TimerWindowTop = _timerWindow?.Top
+                        ?? _timerWindowTop
                 };
 
                 string json = JsonSerializer.Serialize(
