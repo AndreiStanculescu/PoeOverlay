@@ -55,7 +55,14 @@ namespace MyPoeOverlay
         private double _timerWindowHeight = 280;
         private double _timerWindowLeft = 520;
         private double _timerWindowTop = 100;
-
+        private double _settingsWindowWidth = 500;
+        private double _settingsWindowHeight = 620;
+        private double _settingsWindowLeft = 100;
+        private double _settingsWindowTop = 100;
+        private double _actHistoryWindowWidth = 480;
+        private double _actHistoryWindowHeight = 360;
+        private double _actHistoryWindowLeft = 100;
+        private double _actHistoryWindowTop = 100;
         private string SettingsPath => Path.Combine(
             Environment.GetFolderPath(
                 Environment.SpecialFolder.LocalApplicationData),
@@ -153,8 +160,16 @@ namespace MyPoeOverlay
 
             _settingsWindow = new SettingsWindow
             {
-                Owner = this
+                Owner = this,
+                Width = Math.Max(420, _settingsWindowWidth),
+                Height = Math.Max(480, _settingsWindowHeight),
+                Left = _settingsWindowLeft,
+                Top = _settingsWindowTop
             };
+            _settingsWindow.LocationChanged += (_, _) =>
+                SaveSettingsWindowGeometry();
+            _settingsWindow.SizeChanged += (_, _) =>
+                SaveSettingsWindowGeometry();
             _settingsWindow.SetContent(SettingsPanel);
             _settingsWindow.Closing += (_, e) =>
             {
@@ -246,6 +261,30 @@ namespace MyPoeOverlay
             _timerWindowHeight = _timerWindow.Height;
             _timerWindowLeft = _timerWindow.Left;
             _timerWindowTop = _timerWindow.Top;
+            SaveSettings();
+        }
+
+        private void SaveSettingsWindowGeometry()
+        {
+            if (_settingsWindow == null || _isClosing)
+                return;
+
+            _settingsWindowWidth = _settingsWindow.Width;
+            _settingsWindowHeight = _settingsWindow.Height;
+            _settingsWindowLeft = _settingsWindow.Left;
+            _settingsWindowTop = _settingsWindow.Top;
+            SaveSettings();
+        }
+
+        private void SaveActHistoryWindowGeometry(Window window)
+        {
+            if (_isClosing)
+                return;
+
+            _actHistoryWindowWidth = window.Width;
+            _actHistoryWindowHeight = window.Height;
+            _actHistoryWindowLeft = window.Left;
+            _actHistoryWindowTop = window.Top;
             SaveSettings();
         }
 
@@ -1533,8 +1572,19 @@ namespace MyPoeOverlay
                 records,
                 sessionId => DeleteActTimeRecord(actName, sessionId))
             {
-                Owner = this
+                Owner = this,
+                Width = Math.Max(400, _actHistoryWindowWidth),
+                Height = Math.Max(260, _actHistoryWindowHeight),
+                Left = _actHistoryWindowLeft,
+                Top = _actHistoryWindowTop
             };
+
+            historyWindow.LocationChanged += (_, _) =>
+                SaveActHistoryWindowGeometry(historyWindow);
+            historyWindow.SizeChanged += (_, _) =>
+                SaveActHistoryWindowGeometry(historyWindow);
+            historyWindow.Closed += (_, _) =>
+                SaveActHistoryWindowGeometry(historyWindow);
 
             historyWindow.ShowDialog();
         }
@@ -2046,6 +2096,17 @@ namespace MyPoeOverlay
             public double TimerWindowHeight { get; set; } = 280;
             public double TimerWindowLeft { get; set; } = 520;
             public double TimerWindowTop { get; set; } = 100;
+
+            public double SettingsWindowWidth { get; set; } = 500;
+            public double SettingsWindowHeight { get; set; } = 620;
+            public double SettingsWindowLeft { get; set; } = 100;
+            public double SettingsWindowTop { get; set; } = 100;
+
+            public double ActHistoryWindowWidth { get; set; } = 480;
+            public double ActHistoryWindowHeight { get; set; } = 360;
+            public double ActHistoryWindowLeft { get; set; } = 100;
+            public double ActHistoryWindowTop { get; set; } = 100;
+
         }
         
         private void LoadSettings()
@@ -2102,6 +2163,23 @@ namespace MyPoeOverlay
                                 Math.Max(250, settings.TimerWindowHeight);
                             _timerWindowLeft = settings.TimerWindowLeft;
                             _timerWindowTop = settings.TimerWindowTop;
+
+                            _settingsWindowWidth =
+                                Math.Max(420, settings.SettingsWindowWidth);
+                            _settingsWindowHeight =
+                                Math.Max(480, settings.SettingsWindowHeight);
+                            _settingsWindowLeft = settings.SettingsWindowLeft;
+                            _settingsWindowTop = settings.SettingsWindowTop;
+
+                            _actHistoryWindowWidth =
+                                Math.Max(400, settings.ActHistoryWindowWidth);
+                            _actHistoryWindowHeight =
+                                Math.Max(260, settings.ActHistoryWindowHeight);
+                            _actHistoryWindowLeft =
+                                settings.ActHistoryWindowLeft;
+                            _actHistoryWindowTop =
+                                settings.ActHistoryWindowTop;
+
                         }
                     }
                 }
@@ -2171,7 +2249,19 @@ namespace MyPoeOverlay
                     TimerWindowLeft = _timerWindow?.Left
                         ?? _timerWindowLeft,
                     TimerWindowTop = _timerWindow?.Top
-                        ?? _timerWindowTop
+                        ?? _timerWindowTop,
+                    SettingsWindowWidth = _settingsWindow?.Width
+                        ?? _settingsWindowWidth,
+                    SettingsWindowHeight = _settingsWindow?.Height
+                        ?? _settingsWindowHeight,
+                    SettingsWindowLeft = _settingsWindow?.Left
+                        ?? _settingsWindowLeft,
+                    SettingsWindowTop = _settingsWindow?.Top
+                        ?? _settingsWindowTop,
+                    ActHistoryWindowWidth = _actHistoryWindowWidth,
+                    ActHistoryWindowHeight = _actHistoryWindowHeight,
+                    ActHistoryWindowLeft = _actHistoryWindowLeft,
+                    ActHistoryWindowTop = _actHistoryWindowTop
                 };
 
                 string json = JsonSerializer.Serialize(

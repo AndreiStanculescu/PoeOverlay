@@ -8,7 +8,7 @@
         MinHeight="480"
         WindowStyle="None"
         AllowsTransparency="True"
-        WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="Manual"
         Background="Transparent"
         Topmost="True"
         ShowInTaskbar="False">
