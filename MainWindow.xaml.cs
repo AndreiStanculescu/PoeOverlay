@@ -50,6 +50,7 @@ namespace MyPoeOverlay
         private bool _isLoadingSettings;
         private bool _isUpdatingActSelection;
         private bool _isClosing;
+        private bool _isWindowLocked;
 
         private double _timerWindowWidth = 320;
         private double _timerWindowHeight = 280;
@@ -1228,8 +1229,34 @@ namespace MyPoeOverlay
             object sender,
             System.Windows.Controls.Primitives.DragDeltaEventArgs e)
         {
+            if (_isWindowLocked)
+                return;
+
             Width = Math.Max(MinWidth, Width + e.HorizontalChange);
             Height = Math.Max(MinHeight, Height + e.VerticalChange);
+        }
+
+        private void WindowLockButton_Click(
+            object sender,
+            RoutedEventArgs e)
+        {
+            _isWindowLocked = !_isWindowLocked;
+            ResizeMode = _isWindowLocked
+                ? ResizeMode.NoResize
+                : ResizeMode.CanResize;
+            ResizeThumb.IsEnabled = !_isWindowLocked;
+            ResizeThumb.Cursor = _isWindowLocked
+                ? Cursors.Arrow
+                : Cursors.SizeNWSE;
+            WindowLockButton.Content = _isWindowLocked
+                ? "Unlock"
+                : "Lock";
+            WindowLockButton.ToolTip = _isWindowLocked
+                ? "Unlock window position and size"
+                : "Lock window position and size";
+            WindowLockButton.Background = _isWindowLocked
+                ? new SolidColorBrush(Color.FromRgb(58, 53, 36))
+                : new SolidColorBrush(Color.FromRgb(41, 41, 41));
         }
 
         private void CloseButton_Click(
@@ -1241,7 +1268,8 @@ namespace MyPoeOverlay
         private void Overlay_MouseLeftButtonDown(
             object sender, MouseButtonEventArgs e)
         {
-            if (e.OriginalSource is System.Windows.Controls.Button)
+            if (_isWindowLocked ||
+                e.OriginalSource is System.Windows.Controls.Button)
                 return;
 
             DragMove();

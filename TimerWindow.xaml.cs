@@ -19,6 +19,7 @@ namespace MyPoeOverlay
 
         private bool _isUpdatingSelection;
         private bool _isEditingElapsed;
+        private bool _isWindowLocked;
         private string _latestElapsedText = "00:00:00";
 
         public string? SelectedActName =>
@@ -259,14 +260,44 @@ namespace MyPoeOverlay
             object sender,
             MouseButtonEventArgs e)
         {
-            if (e.ButtonState == MouseButtonState.Pressed)
+            if (!_isWindowLocked &&
+                e.ButtonState == MouseButtonState.Pressed &&
+                e.OriginalSource is not System.Windows.Controls.Button)
+            {
                 DragMove();
+            }
+        }
+
+        private void WindowLockButton_Click(
+            object sender,
+            RoutedEventArgs e)
+        {
+            _isWindowLocked = !_isWindowLocked;
+            ResizeMode = _isWindowLocked
+                ? ResizeMode.NoResize
+                : ResizeMode.CanResize;
+            ResizeThumb.IsEnabled = !_isWindowLocked;
+            ResizeThumb.Cursor = _isWindowLocked
+                ? Cursors.Arrow
+                : Cursors.SizeNWSE;
+            WindowLockButton.Content = _isWindowLocked
+                ? "Unlock"
+                : "Lock";
+            WindowLockButton.ToolTip = _isWindowLocked
+                ? "Unlock window position and size"
+                : "Lock window position and size";
+            WindowLockButton.Background = _isWindowLocked
+                ? new SolidColorBrush(Color.FromRgb(58, 53, 36))
+                : new SolidColorBrush(Color.FromRgb(41, 41, 41));
         }
 
         private void ResizeThumb_DragDelta(
             object sender,
             System.Windows.Controls.Primitives.DragDeltaEventArgs e)
         {
+            if (_isWindowLocked)
+                return;
+
             Width = Math.Max(MinWidth, Width + e.HorizontalChange);
             Height = Math.Max(MinHeight, Height + e.VerticalChange);
         }
