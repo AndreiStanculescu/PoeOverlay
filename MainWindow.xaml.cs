@@ -8,11 +8,14 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Diagnostics;
 using System.Windows.Threading;
+using System.Windows.Interop;
 
 
 namespace MyPoeOverlay
@@ -20,6 +23,15 @@ namespace MyPoeOverlay
     public partial class MainWindow : Window
     {
         private const int MaxAutomaticTaskSkip = 2;
+        private const int ClickThroughHotkeyId = 0x4A1;
+        private const int WmHotkey = 0x0312;
+        private const int GwlExStyle = -20;
+        private const long WsExTransparent = 0x00000020L;
+        private const uint ModNoRepeat = 0x4000;
+        private const uint SwpNoSize = 0x0001;
+        private const uint SwpNoMove = 0x0002;
+        private const uint SwpNoZOrder = 0x0004;
+        private const uint SwpFrameChanged = 0x0020;
 
         private readonly List<RouteStep> _steps = new();
         private List<ActChoice> _actChoices = new();
@@ -51,8 +63,15 @@ namespace MyPoeOverlay
         private bool _isUpdatingActSelection;
         private bool _isClosing;
         private bool _isWindowLocked;
+        private bool _isClickThroughEnabled;
+        private bool _clickThroughHotkeyRegistered;
+        private string _clickThroughHotkey = "Ctrl+Shift+O";
+        private ModifierKeys _clickThroughModifiers =
+            ModifierKeys.Control | ModifierKeys.Shift;
+        private Key _clickThroughKey = Key.O;
+        private HwndSource? _windowSource;
 
-        private double _timerWindowWidth = 320;
+        private double _timerWindowWidth = 360;
         private double _timerWindowHeight = 280;
         private double _timerWindowLeft = 520;
         private double _timerWindowTop = 100;
@@ -86,6 +105,7 @@ namespace MyPoeOverlay
 
             MouseLeftButtonDown += Overlay_MouseLeftButtonDown;
             Loaded += MainWindow_Loaded;
+            SourceInitialized += MainWindow_SourceInitialized;
 
             Closed += (_, _) =>
             {
@@ -102,6 +122,8 @@ namespace MyPoeOverlay
                 }
 
                 SaveSettings();
+                UnregisterClickThroughHotkey();
+                _windowSource?.RemoveHook(MainWindow_WindowMessage);
 
                 _settingsWindow?.Close();
                 _timerWindow?.CloseFromMainWindow();
@@ -125,6 +147,341 @@ namespace MyPoeOverlay
                 }
             };
         }
+
+        private void MainWindow_SourceInitialized(
+            object? sender,
+            EventArgs e)
+        {
+            _windowSource = HwndSource.FromHwnd(
+                new WindowInteropHelper(this).Handle)
+                ?? throw new InvalidOperationException(
+                    "Could not access the overlay window handle.");
+            _windowSource.AddHook(MainWindow_WindowMessage);
+        }
+
+        private IntPtr MainWindow_WindowMessage(
+            IntPtr hwnd,
+            int message,
+            IntPtr wParam,
+            IntPtr lParam,
+            ref bool handled)
+        {
+            if (message == WmHotkey &&
+                wParam.ToInt32() == ClickThroughHotkeyId)
+            {
+                ToggleClickThrough();
+                handled = true;
+            }
+
+            return IntPtr.Zero;
+        }
+
+        private void ToggleClickThrough()
+        {
+            bool previousState = _isClickThroughEnabled;
+            bool requestedState = !previousState;
+
+            try
+            {
+                SetClickThroughEnabled(requestedState);
+            }
+            catch (Win32Exception ex)
+            {
+                try
+                {
+                    SetWindowClickThrough(this, previousState);
+                    if (_timerWindow != null)
+                        SetWindowClickThrough(_timerWindow, previousState);
+                }
+                catch (Win32Exception rollbackException)
+                {
+                    Debug.WriteLine(
+                        $"Click-through rollback error: {rollbackException.Message}");
+                }
+
+                ClickThroughHotkeyStatusText.Text =
+                    $"Could not toggle click-through: {ex.Message}";
+                Debug.WriteLine($"Click-through toggle error: {ex.Message}");
+            }
+        }
+
+        private void SetClickThroughEnabled(bool enabled)
+        {
+            SetWindowClickThrough(this, enabled);
+            if (_timerWindow != null)
+                SetWindowClickThrough(_timerWindow, enabled);
+
+            _isClickThroughEnabled = enabled;
+            ClickThroughHotkeyStatusText.Text = enabled
+                ? $"Click-through enabled • { _clickThroughHotkey } to interact"
+                : $"Overlay is interactive • { _clickThroughHotkey } to pass clicks through";
+        }
+
+        private static void SetWindowClickThrough(Window window, bool enabled)
+        {
+            IntPtr hwnd = new WindowInteropHelper(window).Handle;
+            if (hwnd == IntPtr.Zero)
+                return;
+
+            IntPtr currentStyle = GetWindowLongPtr(hwnd, GwlExStyle);
+            long style = currentStyle.ToInt64();
+            long updatedStyle = enabled
+                ? style | WsExTransparent
+                : style & ~WsExTransparent;
+
+            if (updatedStyle == style)
+                return;
+
+            Marshal.SetLastPInvokeError(0);
+            IntPtr previousStyle = SetWindowLongPtr(
+                hwnd,
+                GwlExStyle,
+                new IntPtr(updatedStyle));
+
+            if (previousStyle == IntPtr.Zero &&
+                Marshal.GetLastPInvokeError() != 0)
+            {
+                throw new Win32Exception(
+                    Marshal.GetLastPInvokeError(),
+                    "Could not change the overlay click-through style.");
+            }
+
+            if (!SetWindowPos(
+                hwnd,
+                IntPtr.Zero,
+                0,
+                0,
+                0,
+                0,
+                SwpNoMove | SwpNoSize | SwpNoZOrder | SwpFrameChanged))
+            {
+                throw new Win32Exception(
+                    Marshal.GetLastPInvokeError(),
+                    "Could not refresh the overlay window style.");
+            }
+        }
+
+        private void ClickThroughHotkeyTextBox_GotKeyboardFocus(
+            object sender,
+            KeyboardFocusChangedEventArgs e)
+        {
+            ClickThroughHotkeyTextBox.Text = "Press shortcut...";
+            ClickThroughHotkeyStatusText.Text =
+                "Press a key with Ctrl, Alt, Shift, or Windows.";
+        }
+
+        private void ClickThroughHotkeyTextBox_LostKeyboardFocus(
+            object sender,
+            KeyboardFocusChangedEventArgs e)
+        {
+            ClickThroughHotkeyTextBox.Text = _clickThroughHotkey;
+        }
+
+        private void ClickThroughHotkeyTextBox_PreviewKeyDown(
+            object sender,
+            KeyEventArgs e)
+        {
+            e.Handled = true;
+
+            Key key = e.Key == Key.System ? e.SystemKey : e.Key;
+            if (key is Key.LeftCtrl or Key.RightCtrl or
+                Key.LeftAlt or Key.RightAlt or
+                Key.LeftShift or Key.RightShift or
+                Key.LWin or Key.RWin)
+            {
+                return;
+            }
+
+            ModifierKeys modifiers = Keyboard.Modifiers;
+            if (key == Key.Escape)
+            {
+                ClickThroughHotkeyTextBox.Text = _clickThroughHotkey;
+                ClickThroughHotkeyStatusText.Text =
+                    "Shortcut change cancelled.";
+                Keyboard.ClearFocus();
+                return;
+            }
+
+            if (modifiers == ModifierKeys.None)
+            {
+                ClickThroughHotkeyStatusText.Text =
+                    "Add Ctrl, Alt, Shift, or Windows to the shortcut.";
+                return;
+            }
+
+            if (!TrySetClickThroughHotkey(key, modifiers))
+            {
+                ClickThroughHotkeyTextBox.Text = _clickThroughHotkey;
+                return;
+            }
+
+            ClickThroughHotkeyTextBox.Text = _clickThroughHotkey;
+            ClickThroughHotkeyStatusText.Text =
+                $"Shortcut set • {_clickThroughHotkey}";
+            SaveSettings();
+            Keyboard.ClearFocus();
+        }
+
+        private bool TrySetClickThroughHotkey(
+            Key key,
+            ModifierKeys modifiers)
+        {
+            if (key == Key.None ||
+                key is Key.System or Key.ImeProcessed or
+                    Key.DeadCharProcessed or Key.OemClear)
+            {
+                ClickThroughHotkeyStatusText.Text =
+                    "That key cannot be used as a shortcut.";
+                return false;
+            }
+
+            bool wasRegistered = _clickThroughHotkeyRegistered;
+            if (wasRegistered)
+                UnregisterClickThroughHotkey();
+
+            if (_windowSource != null &&
+                !RegisterHotKey(
+                    _windowSource.Handle,
+                    ClickThroughHotkeyId,
+                    (uint)modifiers | ModNoRepeat,
+                    (uint)KeyInterop.VirtualKeyFromKey(key)))
+            {
+                int error = Marshal.GetLastPInvokeError();
+                if (wasRegistered)
+                {
+                    _clickThroughHotkeyRegistered = RegisterHotKey(
+                        _windowSource.Handle,
+                        ClickThroughHotkeyId,
+                        (uint)_clickThroughModifiers | ModNoRepeat,
+                        (uint)KeyInterop.VirtualKeyFromKey(
+                            _clickThroughKey));
+                }
+
+                ClickThroughHotkeyStatusText.Text =
+                    $"Could not register shortcut ({new Win32Exception(error).Message}).";
+                return false;
+            }
+
+            _clickThroughModifiers = modifiers;
+            _clickThroughKey = key;
+            _clickThroughHotkey = FormatHotkey(key, modifiers);
+            _clickThroughHotkeyRegistered = _windowSource != null;
+            return true;
+        }
+
+        private static string FormatHotkey(Key key, ModifierKeys modifiers)
+        {
+            var parts = new List<string>();
+            if (modifiers.HasFlag(ModifierKeys.Control))
+                parts.Add("Ctrl");
+            if (modifiers.HasFlag(ModifierKeys.Alt))
+                parts.Add("Alt");
+            if (modifiers.HasFlag(ModifierKeys.Shift))
+                parts.Add("Shift");
+            if (modifiers.HasFlag(ModifierKeys.Windows))
+                parts.Add("Win");
+            parts.Add(key.ToString());
+            return string.Join("+", parts);
+        }
+
+        private bool TryLoadClickThroughHotkey(string shortcut)
+        {
+            string[] parts = shortcut.Split(
+                '+',
+                StringSplitOptions.RemoveEmptyEntries |
+                StringSplitOptions.TrimEntries);
+            if (parts.Length < 2 ||
+                !Enum.TryParse(parts[^1], true, out Key key))
+            {
+                return false;
+            }
+
+            ModifierKeys modifiers = ModifierKeys.None;
+            foreach (string modifier in parts[..^1])
+            {
+                modifiers |= modifier.ToLowerInvariant() switch
+                {
+                    "ctrl" or "control" => ModifierKeys.Control,
+                    "alt" => ModifierKeys.Alt,
+                    "shift" => ModifierKeys.Shift,
+                    "win" or "windows" => ModifierKeys.Windows,
+                    _ => ModifierKeys.None
+                };
+            }
+
+            if (modifiers == ModifierKeys.None)
+                return false;
+
+            _clickThroughModifiers = modifiers;
+            _clickThroughKey = key;
+            _clickThroughHotkey = FormatHotkey(key, modifiers);
+            return true;
+        }
+
+        private void RegisterClickThroughHotkey()
+        {
+            if (_windowSource == null || _clickThroughHotkeyRegistered)
+                return;
+
+            _clickThroughHotkeyRegistered = RegisterHotKey(
+                _windowSource.Handle,
+                ClickThroughHotkeyId,
+                (uint)_clickThroughModifiers | ModNoRepeat,
+                (uint)KeyInterop.VirtualKeyFromKey(_clickThroughKey));
+
+            if (!_clickThroughHotkeyRegistered)
+            {
+                int error = Marshal.GetLastPInvokeError();
+                ClickThroughHotkeyStatusText.Text =
+                    $"Could not register {_clickThroughHotkey} ({new Win32Exception(error).Message}).";
+                return;
+            }
+
+            ClickThroughHotkeyTextBox.Text = _clickThroughHotkey;
+            ClickThroughHotkeyStatusText.Text =
+                $"Overlay is interactive • {_clickThroughHotkey} to pass clicks through";
+        }
+
+        private void UnregisterClickThroughHotkey()
+        {
+            if (!_clickThroughHotkeyRegistered || _windowSource == null)
+                return;
+
+            UnregisterHotKey(_windowSource.Handle, ClickThroughHotkeyId);
+            _clickThroughHotkeyRegistered = false;
+        }
+
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool RegisterHotKey(
+            IntPtr hWnd,
+            int id,
+            uint fsModifiers,
+            uint vk);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+
+        [DllImport("user32.dll", EntryPoint = "GetWindowLongPtrW", SetLastError = true)]
+        private static extern IntPtr GetWindowLongPtr(IntPtr hWnd, int index);
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowLongPtrW", SetLastError = true)]
+        private static extern IntPtr SetWindowLongPtr(
+            IntPtr hWnd,
+            int index,
+            IntPtr value);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool SetWindowPos(
+            IntPtr hWnd,
+            IntPtr hWndInsertAfter,
+            int x,
+            int y,
+            int cx,
+            int cy,
+            uint flags);
 
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
@@ -209,7 +566,7 @@ namespace MyPoeOverlay
 
             _timerWindow = new TimerWindow
             {
-                Width = Math.Max(280, _timerWindowWidth),
+                Width = Math.Max(340, _timerWindowWidth),
                 Height = Math.Max(250, _timerWindowHeight),
                 Left = _timerWindowLeft,
                 Top = _timerWindowTop,
@@ -220,6 +577,7 @@ namespace MyPoeOverlay
             _timerWindow.SetElapsedRequested += SetTimerElapsed;
             _timerWindow.PauseRequested += PauseTimer;
             _timerWindow.StopRequested += StopTimer;
+            _timerWindow.FinishActRequested += FinishActManually;
             _timerWindow.ActSelectionChanged += SelectActFromTimer;
             _timerWindow.LocationChanged += (_, _) => SaveTimerWindowSettings();
             _timerWindow.SizeChanged += (_, _) => SaveTimerWindowSettings();
@@ -382,6 +740,7 @@ namespace MyPoeOverlay
             try
             {
                 LoadSettings();
+                RegisterClickThroughHotkey();
                 LoadTimerHistory();
 
                 LoadAreas();
@@ -393,6 +752,8 @@ namespace MyPoeOverlay
                 UpdateActTimesDisplay();
 
                 _timerWindow?.Show();
+                if (_isClickThroughEnabled && _timerWindow != null)
+                    SetWindowClickThrough(_timerWindow, enabled: true);
 
                 string? logPath = FindClientLog();
 
@@ -481,33 +842,18 @@ namespace MyPoeOverlay
 
                     string description = RenderParts(parts);
                     string? enterAreaId = GetEnterAreaId(step);
+                    string? arenaName = GetArenaName(step);
 
-                    string details = "";
                     List<string> waypointDestinations =
                         GetWaypointDestinations(step);
 
-                    if (step.TryGetProperty("subSteps", out JsonElement subSteps)
-                        && subSteps.ValueKind == JsonValueKind.Array)
-                    {
-                        var detailLines = new List<string>();
-
-                        foreach (JsonElement sub in subSteps.EnumerateArray())
-                        {
-                            if (sub.TryGetProperty("parts", out JsonElement subParts))
-                            {
-                                string detail = RenderParts(subParts);
-
-                                if (!string.IsNullOrWhiteSpace(detail))
-                                    detailLines.Add(detail);
-                            }
-                        }
-
-                        if (detailLines.Count > 0)
-                            details = string.Join(" • ", detailLines);
-                    }
-
                     _steps.Add(new RouteStep(
-                        actName, description, enterAreaId, details));
+                        actName,
+                        description,
+                        enterAreaId,
+                        "",
+                        arenaName));
+                        AddNestedRouteSteps(actName, step);
 
                     string? logoutTownAreaId = GetLogoutAreaId(step);
                     string? nextStepEnterAreaId =
@@ -683,6 +1029,10 @@ namespace MyPoeOverlay
 
                 switch (type)
                 {
+                    case "arena":
+                        result.Append(GetString(part, "value") ?? type);
+                        break;
+
                     case "enter":
                     {
                         string id = GetString(part, "areaId") ?? "";
@@ -762,6 +1112,39 @@ namespace MyPoeOverlay
             return result.ToString().Trim();
         }
 
+        private void AddNestedRouteSteps(
+            string actName,
+            JsonElement step)
+        {
+            if (!step.TryGetProperty("subSteps", out JsonElement subSteps) ||
+                subSteps.ValueKind != JsonValueKind.Array)
+            {
+                return;
+            }
+
+            foreach (JsonElement subStep in subSteps.EnumerateArray())
+            {
+                if (subStep.TryGetProperty("parts", out JsonElement parts) &&
+                    parts.ValueKind == JsonValueKind.Array)
+                {
+                    string? arenaName = GetArenaName(subStep);
+
+                    _steps.Add(new RouteStep(
+                        actName,
+                        RenderParts(parts),
+                        GetEnterAreaId(subStep),
+                        "",
+                        arenaName));
+
+                        AddNestedRouteSteps(actName, subStep);
+                }
+                else
+                {
+                    AddNestedRouteSteps(actName, subStep);
+                }
+            }
+        }
+
         private static string? GetString(JsonElement element, string property)
         {
             return element.TryGetProperty(property, out JsonElement value)
@@ -784,6 +1167,28 @@ namespace MyPoeOverlay
                     GetString(part, "type") == "enter")
                 {
                     return GetString(part, "areaId");
+                }
+            }
+
+            return null;
+        }
+
+        private static string? GetArenaName(JsonElement step)
+        {
+            if (!step.TryGetProperty("parts", out JsonElement parts) ||
+                parts.ValueKind != JsonValueKind.Array)
+            {
+                return null;
+            }
+
+            foreach (JsonElement part in parts.EnumerateArray())
+            {
+                if (part.ValueKind == JsonValueKind.Object &&
+                    GetString(part, "type") == "arena")
+                {
+                    string? arenaName = GetString(part, "value");
+                    if (!string.IsNullOrWhiteSpace(arenaName))
+                        return arenaName;
                 }
             }
 
@@ -933,8 +1338,13 @@ namespace MyPoeOverlay
                     StringComparison.OrdinalIgnoreCase));
 
             var firstAreaStepByAct = _steps
-                .Select((step, index) => new { step.ActName, step.EnterAreaId, Index = index })
-                .Where(step => step.EnterAreaId != null)
+                .Select((step, index) => new
+                {
+                    step.ActName,
+                    step.IsAreaTask,
+                    Index = index
+                })
+                .Where(step => step.IsAreaTask)
                 .GroupBy(step => step.ActName, StringComparer.OrdinalIgnoreCase)
                 .ToDictionary(
                     group => group.Key,
@@ -943,14 +1353,14 @@ namespace MyPoeOverlay
 
             int currentTaskOrdinal = _steps
                 .Take(_currentStepIndex + 1)
-                .Count(step => step.EnterAreaId != null) - 1;
+                .Count(step => step.IsAreaTask) - 1;
             int candidateTaskOrdinal = _steps
                 .Take(_currentStepIndex)
-                .Count(step => step.EnterAreaId != null) - 1;
+                .Count(step => step.IsAreaTask) - 1;
 
             for (int i = _currentStepIndex; i < _steps.Count; i++)
             {
-                if (_steps[i].EnterAreaId != null)
+                if (_steps[i].IsAreaTask)
                     candidateTaskOrdinal++;
 
                 if (candidateTaskOrdinal - currentTaskOrdinal >
@@ -975,13 +1385,14 @@ namespace MyPoeOverlay
                     continue;
                 }
 
+                string? expectedName = _steps[i].ZoneName;
                 string? areaId = _steps[i].EnterAreaId;
-
-                if (areaId == null)
+                if (expectedName == null &&
+                    (areaId == null ||
+                     !_areaNames.TryGetValue(areaId, out expectedName)))
+                {
                     continue;
-
-                if (!_areaNames.TryGetValue(areaId, out string? expectedName))
-                    continue;
+                }
 
                 if (string.Equals(
                     expectedName,
@@ -1036,13 +1447,6 @@ namespace MyPoeOverlay
                     StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
-            int completedCount = actSteps.Count(
-                x => x.Index < _currentStepIndex);
-
-            ProgressText.Text = routeComplete
-                ? $"{selectedAct} • {actSteps.Count}/{actSteps.Count} tasks complete • Route complete!"
-                : $"{selectedAct} • {completedCount}/{actSteps.Count} tasks complete";
-
             double fontSize = FontSizeSlider.Value;
             double subObjectiveFontSize = Math.Max(10, fontSize - 2);
             var objectiveGroups =
@@ -1055,16 +1459,17 @@ namespace MyPoeOverlay
 
             foreach (var item in actSteps)
             {
-                if (item.Step.EnterAreaId != null)
+                if (item.Step.IsAreaTask)
                 {
                     if (currentGroup.HasValue)
                         objectiveGroups.Add(currentGroup.Value);
 
-                    string title = _areaNames.TryGetValue(
-                        item.Step.EnterAreaId,
-                        out string? areaName)
-                        ? areaName
-                        : item.Step.Description;
+                    string title = item.Step.ZoneName
+                        ?? (_areaNames.TryGetValue(
+                                item.Step.EnterAreaId!,
+                                out string? areaName)
+                            ? areaName
+                            : item.Step.Description);
 
                     currentGroup = (
                         item.Index,
@@ -1106,6 +1511,13 @@ namespace MyPoeOverlay
                     leadingSubObjectives));
             }
 
+            int completedCount = objectiveGroups.Count(
+                group => group.MainIndex < _currentStepIndex);
+
+            ProgressText.Text = routeComplete
+                ? $"{selectedAct} • {objectiveGroups.Count}/{objectiveGroups.Count} tasks complete • Route complete!"
+                : $"{selectedAct} • {completedCount}/{objectiveGroups.Count} tasks complete";
+
             int currentGroupIndex = objectiveGroups.FindIndex(group =>
                 _currentStepIndex >= group.FirstIndex &&
                 _currentStepIndex <= group.MainIndex);
@@ -1123,13 +1535,10 @@ namespace MyPoeOverlay
             }
 
             const int visibleObjectiveCount = 10;
-            const int previousObjectiveCount = 1;
-            int lastStartIndex = Math.Max(
-                0, objectiveGroups.Count - visibleObjectiveCount);
-            int startIndex = Math.Clamp(
-                currentGroupIndex - previousObjectiveCount,
+            const int previousObjectiveCount = 2;
+            int startIndex = Math.Max(
                 0,
-                lastStartIndex);
+                currentGroupIndex - previousObjectiveCount);
 
             var objectives = objectiveGroups
                 .Skip(startIndex)
@@ -1203,6 +1612,7 @@ namespace MyPoeOverlay
             SelectActForCurrentStep(_steps[_currentStepIndex].ActName);
 
             UpdateOverlay();
+            ScrollObjectivesToTop();
         }
 
 
@@ -1221,6 +1631,7 @@ namespace MyPoeOverlay
                     _steps[_currentStepIndex].ActName);
             }
             UpdateOverlay();
+            ScrollObjectivesToTop();
         }
             
 
@@ -1476,7 +1887,8 @@ namespace MyPoeOverlay
                 selectedAct,
                 actText,
                 elapsedText,
-                statusText);
+                statusText,
+                _currentSession != null);
         }
 
         private void StartTimerForAct(string selectedAct)
@@ -1547,6 +1959,24 @@ namespace MyPoeOverlay
 
             _timerManuallyStopped = true;
             FinishSession(completed: false);
+        }
+
+        private void FinishActManually()
+        {
+            if (_currentSession == null ||
+                string.IsNullOrWhiteSpace(_timedActName))
+            {
+                return;
+            }
+
+            MarkActCompleted(_currentSession, _timedActName);
+            FinishCurrentAct();
+            _timerPaused = true;
+            _timerWaitingForArea = false;
+
+            SaveTimerHistory();
+            UpdateTimerDisplay();
+            UpdateActTimesDisplay();
         }
 
         private void ShowActHistoryButton_Click(
@@ -2057,7 +2487,12 @@ namespace MyPoeOverlay
             string ActName,
             string Description,
             string? EnterAreaId,
-            string Details);
+            string Details,
+            string? ZoneName = null)
+        {
+            public bool IsAreaTask =>
+                EnterAreaId != null || ZoneName != null;
+        }
 
 
         private sealed record ObjectiveDisplay(
@@ -2120,7 +2555,7 @@ namespace MyPoeOverlay
             public double WindowLeft { get; set; } = 100;
             public double WindowTop { get; set; } = 100;
 
-            public double TimerWindowWidth { get; set; } = 320;
+            public double TimerWindowWidth { get; set; } = 360;
             public double TimerWindowHeight { get; set; } = 280;
             public double TimerWindowLeft { get; set; } = 520;
             public double TimerWindowTop { get; set; } = 100;
@@ -2134,6 +2569,7 @@ namespace MyPoeOverlay
             public double ActHistoryWindowHeight { get; set; } = 360;
             public double ActHistoryWindowLeft { get; set; } = 100;
             public double ActHistoryWindowTop { get; set; } = 100;
+            public string ClickThroughHotkey { get; set; } = "Ctrl+Shift+O";
 
         }
         
@@ -2154,6 +2590,13 @@ namespace MyPoeOverlay
 
                         if (settings != null)
                         {
+                            if (TryLoadClickThroughHotkey(
+                                settings.ClickThroughHotkey))
+                            {
+                                ClickThroughHotkeyTextBox.Text =
+                                    _clickThroughHotkey;
+                            }
+
                             OpacitySlider.Value =
                                 Math.Clamp(settings.OpacityPercent, 35, 100);
 
@@ -2186,7 +2629,7 @@ namespace MyPoeOverlay
                             Top = settings.WindowTop;
 
                             _timerWindowWidth =
-                                Math.Max(280, settings.TimerWindowWidth);
+                                Math.Max(340, settings.TimerWindowWidth);
                             _timerWindowHeight =
                                 Math.Max(250, settings.TimerWindowHeight);
                             _timerWindowLeft = settings.TimerWindowLeft;
@@ -2289,7 +2732,8 @@ namespace MyPoeOverlay
                     ActHistoryWindowWidth = _actHistoryWindowWidth,
                     ActHistoryWindowHeight = _actHistoryWindowHeight,
                     ActHistoryWindowLeft = _actHistoryWindowLeft,
-                    ActHistoryWindowTop = _actHistoryWindowTop
+                    ActHistoryWindowTop = _actHistoryWindowTop,
+                    ClickThroughHotkey = _clickThroughHotkey
                 };
 
                 string json = JsonSerializer.Serialize(

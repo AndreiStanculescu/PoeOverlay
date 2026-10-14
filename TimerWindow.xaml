@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Icon="PoeOverlay.ico"
         Title="Overlay Timer"
-        Width="320"
-        Height="220"
-        MinWidth="280"
+        Width="340"
+        Height="205"
+        MinWidth="300"
         MinHeight="190"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -15,7 +15,7 @@
         ResizeMode="CanResize">
     <Window.Resources>
         <Style x:Key="TimerButtonStyle" TargetType="{x:Type Button}">
-            <Setter Property="Height" Value="30"/>
+            <Setter Property="Height" Value="28"/>
             <Setter Property="Background" Value="#FF292929"/>
             <Setter Property="Foreground" Value="#FFFFCC00"/>
             <Setter Property="BorderBrush" Value="#FF665522"/>
@@ -58,7 +58,7 @@
             BorderBrush="#FF494949"
             BorderThickness="1"
             CornerRadius="12"
-            Padding="12">
+            Padding="8">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -69,7 +69,7 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0"
-                  Margin="0,0,0,10"
+                  Margin="0,0,0,6"
                   MouseLeftButtonDown="Header_MouseLeftButtonDown">
                 <TextBlock x:Name="TimerWindowTitleText"
                            Text="OVERLAY TIMER"
@@ -105,7 +105,7 @@
             <ComboBox x:Name="ActComboBox"
                       Grid.Row="1"
                       Height="30"
-                      Margin="0,0,0,8"
+                      Margin="0,0,0,5"
                       Padding="6,3"
                       Background="#FF292929"
                       Foreground="#FFFFCC00"
@@ -214,11 +214,12 @@
                        Foreground="#FFB0B4BE"
                        FontSize="9"
                        HorizontalAlignment="Center"
-                       Margin="0,0,0,5"/>
+                       Margin="0,0,0,2"/>
 
             <Grid Grid.Row="4"
                   Margin="0,2,0,0">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -242,8 +243,16 @@
                         Margin="2"
                         Click="StopButton_Click"
                         Style="{StaticResource TimerButtonStyle}"/>
+                <Button x:Name="FinishActButton"
+                        Content="Finish Act"
+                        Grid.Column="3"
+                        Margin="2"
+                        FontSize="10"
+                        Click="FinishActButton_Click"
+                        ToolTip="Save and finish the current act"
+                        Style="{StaticResource TimerButtonStyle}"/>
                 <Thumb x:Name="ResizeThumb"
-                       Grid.Column="3"
+                       Grid.Column="4"
                        Width="20"
                        Height="28"
                        Cursor="SizeNWSE"

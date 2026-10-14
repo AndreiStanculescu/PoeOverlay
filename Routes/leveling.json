@@ -1239,16 +1239,6 @@
                     {
                         "type": "arena",
                         "value": "The Weaver's Nest"
-                    },
-                    ", kill ",
-                    {
-                        "type": "kill",
-                        "value": "The Weaver"
-                    },
-                    ", take ",
-                    {
-                        "type": "quest_text",
-                        "value": "Maligaro's Spike"
                     }
                 ],
                 "subSteps": [
@@ -1273,6 +1263,23 @@
                         "type": "fragment_step",
                         "parts": [
                             "Recommended Level: 16"
+                        ],
+                        "subSteps": [],
+                        "edgeIndex": null
+                    },
+                    {
+                        "type": "fragment_step",
+                        "parts": [
+                            "Kill ",
+                            {
+                                "type": "kill",
+                                "value": "The Weaver"
+                            },
+                            ", take ",
+                            {
+                                "type": "quest_text",
+                                "value": "Maligaro's Spike"
+                            }
                         ],
                         "subSteps": [],
                         "edgeIndex": null

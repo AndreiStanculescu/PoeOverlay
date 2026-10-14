@@ -285,6 +285,32 @@
 
             <StackPanel Margin="6,12,6,8">
 
+                <TextBlock Text="CLICK-THROUGH TOGGLE"
+                           Foreground="#FFFFCC00"
+                           FontWeight="Bold"
+                           Margin="0,0,0,8"/>
+                <TextBlock Text="Press a shortcut to set the global toggle hotkey."
+                           Foreground="#FFAAAAAA"
+                           TextWrapping="Wrap"
+                           Margin="0,0,0,6"/>
+                <TextBox x:Name="ClickThroughHotkeyTextBox"
+                         Text="Ctrl+Shift+O"
+                         IsReadOnly="True"
+                         Height="30"
+                         Padding="8,5"
+                         Background="#FF292929"
+                         Foreground="#FFFFCC00"
+                         BorderBrush="#FF665522"
+                         PreviewKeyDown="ClickThroughHotkeyTextBox_PreviewKeyDown"
+                         GotKeyboardFocus="ClickThroughHotkeyTextBox_GotKeyboardFocus"
+                         LostKeyboardFocus="ClickThroughHotkeyTextBox_LostKeyboardFocus"
+                         ToolTip="Focus this field and press a shortcut with Ctrl, Alt, Shift, or Windows"/>
+                <TextBlock x:Name="ClickThroughHotkeyStatusText"
+                           Text="Overlay is interactive"
+                           Foreground="#FFAAAAAA"
+                           TextWrapping="Wrap"
+                           Margin="0,6,0,16"/>
+
                 <TextBlock Text="MAIN OVERLAY"
                            Foreground="#FFFFCC00"
                            FontWeight="Bold"

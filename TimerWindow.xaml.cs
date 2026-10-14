@@ -14,6 +14,7 @@ namespace MyPoeOverlay
         public event Action<string>? StartRequested;
         public event Action? PauseRequested;
         public event Action? StopRequested;
+        public event Action? FinishActRequested;
         public event Action<string>? ActSelectionChanged;
         public event Action<TimeSpan>? SetElapsedRequested;
 
@@ -35,7 +36,8 @@ namespace MyPoeOverlay
             string? selectedAct,
             string actText,
             string elapsedText,
-            string statusText)
+            string statusText,
+            bool canFinishAct)
         {
             string[] names = actNames.ToArray();
 
@@ -70,6 +72,7 @@ namespace MyPoeOverlay
             TimerStatusText.Text = statusText;
 
             ActComboBox.IsEnabled = true;
+            FinishActButton.IsEnabled = canFinishAct;
         }
 
         public void SetAppearance(double opacity, double fontSize)
@@ -78,7 +81,7 @@ namespace MyPoeOverlay
 
             double scale = Math.Clamp(fontSize / 16.0, 0.625, 1.5);
             TimerActText.FontSize = 11 * scale;
-            TimerText.FontSize = 32 * scale;
+            TimerText.FontSize = 30 * scale;
             TimerStatusText.FontSize = 9 * scale;
         }
 
@@ -103,6 +106,13 @@ namespace MyPoeOverlay
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
             StopRequested?.Invoke();
+        }
+
+        private void FinishActButton_Click(
+            object sender,
+            RoutedEventArgs e)
+        {
+            FinishActRequested?.Invoke();
         }
 
         private void TimerText_PreviewMouseLeftButtonDown(
