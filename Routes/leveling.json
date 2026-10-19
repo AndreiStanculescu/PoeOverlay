@@ -1135,6 +1135,25 @@
                     {
                         "type": "fragment_step",
                         "parts": [
+                            "Follow the road"
+                        ],
+                        "subSteps": [],
+                        "edgeIndex": null
+                    },
+                    {
+                        "type": "fragment_step",
+                        "parts": [
+                            "Get ",
+                            {
+                                "type": "waypoint_get"
+                            }
+                        ],
+                        "subSteps": [],
+                        "edgeIndex": null
+                    },
+                    {
+                        "type": "fragment_step",
+                        "parts": [
                             "Go ",
                             {
                                 "type": "dir",
@@ -1146,26 +1165,6 @@
                     }
                 ],
                 "edgeIndex": 41
-            },
-            {
-                "type": "fragment_step",
-                "parts": [
-                    "Get ",
-                    {
-                        "type": "waypoint_get"
-                    }
-                ],
-                "subSteps": [
-                    {
-                        "type": "fragment_step",
-                        "parts": [
-                            "Follow the road"
-                        ],
-                        "subSteps": [],
-                        "edgeIndex": null
-                    }
-                ],
-                "edgeIndex": null
             },
             {
                 "type": "fragment_step",
@@ -1200,7 +1199,11 @@
                     {
                         "type": "fragment_step",
                         "parts": [
-                            "Follow the road"
+                            "Search the side of road opposite ",
+                            {
+                                "type": "waypoint"
+                            },
+                            " for The Weaver's Chamber"
                         ],
                         "subSteps": [],
                         "edgeIndex": null
@@ -1221,9 +1224,15 @@
                     {
                         "type": "fragment_step",
                         "parts": [
-                            "Search the side of road opposite ",
+                            "Try go ",
                             {
-                                "type": "waypoint"
+                                "type": "dir",
+                                "dirIndex": 6
+                            },
+                            ", if it's blocked go ",
+                            {
+                                "type": "dir",
+                                "dirIndex": 1
                             }
                         ],
                         "subSteps": [],
@@ -1242,23 +1251,6 @@
                     }
                 ],
                 "subSteps": [
-                    {
-                        "type": "fragment_step",
-                        "parts": [
-                            "Try go ",
-                            {
-                                "type": "dir",
-                                "dirIndex": 6
-                            },
-                            ", if it's blocked go ",
-                            {
-                                "type": "dir",
-                                "dirIndex": 1
-                            }
-                        ],
-                        "subSteps": [],
-                        "edgeIndex": null
-                    },
                     {
                         "type": "fragment_step",
                         "parts": [
@@ -1609,7 +1601,16 @@
                         "areaId": "1_2_11"
                     }
                 ],
-                "subSteps": [],
+                "subSteps": [
+                    {
+                        "type": "fragment_step",
+                        "parts": [
+                            "S shape or L shape leads to exit"
+                        ],
+                        "subSteps": [],
+                        "edgeIndex": null
+                    }
+                ],
                 "edgeIndex": 54
             },
             {
@@ -1621,16 +1622,7 @@
                         "areaId": "1_2_8"
                     }
                 ],
-                "subSteps": [
-                    {
-                        "type": "fragment_step",
-                        "parts": [
-                            "S shape or L shape leads to exit"
-                        ],
-                        "subSteps": [],
-                        "edgeIndex": null
-                    }
-                ],
+                "subSteps": [],
                 "edgeIndex": 55
             },
             {
