@@ -4531,6 +4531,18 @@
                         ],
                         "subSteps": [],
                         "edgeIndex": null
+                    },
+                    {
+                        "type": "fragment_step",
+                        "parts": [
+                            "Go ",
+                            {
+                                "type": "dir",
+                                "dirIndex": 7
+                            }
+                        ],
+                        "subSteps": [],
+                        "edgeIndex": null
                     }
                 ],
                 "edgeIndex": 149
@@ -4549,20 +4561,7 @@
                         "value": "Ryslatha, the Puppet Mistress"
                     }
                 ],
-                "subSteps": [
-                    {
-                        "type": "fragment_step",
-                        "parts": [
-                            "Go ",
-                            {
-                                "type": "dir",
-                                "dirIndex": 7
-                            }
-                        ],
-                        "subSteps": [],
-                        "edgeIndex": null
-                    }
-                ],
+                "subSteps": [],
                 "edgeIndex": null
             },
             {
