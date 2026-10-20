@@ -566,8 +566,8 @@ namespace MyPoeOverlay
 
             _timerWindow = new TimerWindow
             {
-                Width = Math.Max(340, _timerWindowWidth),
-                Height = Math.Max(250, _timerWindowHeight),
+                Width = Math.Max(300, _timerWindowWidth),
+                Height = Math.Max(190, _timerWindowHeight),
                 Left = _timerWindowLeft,
                 Top = _timerWindowTop,
                 Owner = this
@@ -2629,9 +2629,9 @@ namespace MyPoeOverlay
                             Top = settings.WindowTop;
 
                             _timerWindowWidth =
-                                Math.Max(340, settings.TimerWindowWidth);
+                                Math.Max(300, settings.TimerWindowWidth);
                             _timerWindowHeight =
-                                Math.Max(250, settings.TimerWindowHeight);
+                                Math.Max(190, settings.TimerWindowHeight);
                             _timerWindowLeft = settings.TimerWindowLeft;
                             _timerWindowTop = settings.TimerWindowTop;
 

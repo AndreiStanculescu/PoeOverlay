@@ -102,6 +102,31 @@
                     {
                         "type": "fragment_step",
                         "parts": [
+                            "Go ",
+                            {
+                                "type": "dir",
+                                "dirIndex": 5
+                            },
+                            " find the plaza"
+                        ],
+                        "subSteps": [],
+                        "edgeIndex": null
+                    },
+                    {
+                        "type": "fragment_step",
+                        "parts": [
+                            "Go ",
+                            {
+                                "type": "dir",
+                                "dirIndex": 4
+                            }
+                        ],
+                        "subSteps": [],
+                        "edgeIndex": null
+                    },
+                    {
+                        "type": "fragment_step",
+                        "parts": [
                             "Little streams connect the 3 Rhoa nests"
                         ],
                         "subSteps": [],
@@ -2099,30 +2124,6 @@
                     {
                         "type": "fragment_step",
                         "parts": [
-                            "Search ",
-                            {
-                                "type": "dir",
-                                "dirIndex": 0
-                            }
-                        ],
-                        "subSteps": [],
-                        "edgeIndex": null
-                    }
-                ],
-                "edgeIndex": 69
-            },
-            {
-                "type": "fragment_step",
-                "parts": [
-                    "Get ",
-                    {
-                        "type": "waypoint_get"
-                    }
-                ],
-                "subSteps": [
-                    {
-                        "type": "fragment_step",
-                        "parts": [
                             "Go ",
                             {
                                 "type": "dir",
@@ -2131,20 +2132,18 @@
                         ],
                         "subSteps": [],
                         "edgeIndex": null
-                    }
-                ],
-                "edgeIndex": null
-            },
-            {
-                "type": "fragment_step",
-                "parts": [
-                    "Find and take ",
+                    },
                     {
-                        "type": "quest_text",
-                        "value": "Ribbon Spool"
-                    }
-                ],
-                "subSteps": [
+                        "type": "fragment_step",
+                        "parts": [
+                            "Get ",
+                            {
+                                "type": "waypoint_get"
+                            }
+                        ],
+                        "subSteps": [],
+                        "edgeIndex": null
+                    },
                     {
                         "type": "fragment_step",
                         "parts": [
@@ -2156,9 +2155,21 @@
                         ],
                         "subSteps": [],
                         "edgeIndex": null
+                    },
+                    {
+                        "type": "fragment_step",
+                        "parts": [
+                            "Take ",
+                            {
+                                "type": "quest_text",
+                                "value": "Ribbon Spool"
+                            }
+                        ],
+                        "subSteps": [],
+                        "edgeIndex": null
                     }
                 ],
-                "edgeIndex": null
+                "edgeIndex": 69
             },
             {
                 "type": "fragment_step",
@@ -2194,39 +2205,35 @@
                         "areaId": "1_3_8_2"
                     }
                 ],
-                "subSteps": [],
-                "edgeIndex": 71
-            },
-            {
-                "type": "fragment_step",
-                "parts": [
-                    "➞ ",
+                "subSteps": [
                     {
-                        "type": "arena",
-                        "value": "Eternal Laboratory"
+                        "type": "fragment_step",
+                        "parts": [
+                            "Get ",
+                            {
+                                "type": "crafting",
+                                "crafting_recipes": [
+                                    "Fire Damage - Rank 1"
+                                ]
+                            }
+                        ],
+                        "subSteps": [],
+                        "edgeIndex": null
                     },
-                    ", get ",
                     {
-                        "type": "crafting",
-                        "crafting_recipes": [
-                            "Fire Damage - Rank 1"
-                        ]
+                        "type": "fragment_step",
+                        "parts": [
+                            {
+                                "type": "waypoint_use",
+                                "dstAreaId": "1_3_7",
+                                "srcAreaId": "1_3_8_2"
+                            }
+                        ],
+                        "subSteps": [],
+                        "edgeIndex": null
                     }
                 ],
-                "subSteps": [],
-                "edgeIndex": null
-            },
-            {
-                "type": "fragment_step",
-                "parts": [
-                    {
-                        "type": "waypoint_use",
-                        "dstAreaId": "1_3_7",
-                        "srcAreaId": "1_3_8_2"
-                    }
-                ],
-                "subSteps": [],
-                "edgeIndex": 72
+                "edgeIndex": 71
             },
             {
                 "type": "fragment_step",
@@ -3525,18 +3532,6 @@
                         "areaId": "1_5_2"
                     }
                 ],
-                "subSteps": [],
-                "edgeIndex": 120
-            },
-            {
-                "type": "fragment_step",
-                "parts": [
-                    "Find and take ",
-                    {
-                        "type": "quest_text",
-                        "value": "Miasmeter"
-                    }
-                ],
                 "subSteps": [
                     {
                         "type": "fragment_step",
@@ -3550,34 +3545,11 @@
                         ],
                         "subSteps": [],
                         "edgeIndex": null
-                    }
-                ],
-                "edgeIndex": null
-            },
-            {
-                "type": "fragment_step",
-                "parts": [
-                    "Find and kill ",
-                    {
-                        "type": "kill",
-                        "value": "Justicar Casticus"
                     },
-                    ", take ",
-                    {
-                        "type": "quest_text",
-                        "value": "Eyes of Zeal"
-                    }
-                ],
-                "subSteps": [
                     {
                         "type": "fragment_step",
                         "parts": [
-                            "Go ",
-                            {
-                                "type": "dir",
-                                "dirIndex": 1
-                            },
-                            " from ",
+                            "Take ",
                             {
                                 "type": "quest_text",
                                 "value": "Miasmeter"
@@ -3585,9 +3557,38 @@
                         ],
                         "subSteps": [],
                         "edgeIndex": null
+                    },
+                    {
+                        "type": "fragment_step",
+                        "parts": [
+                            "Go ",
+                            {
+                                "type": "dir",
+                                "dirIndex": 1
+                            }
+                        ],
+                        "subSteps": [],
+                        "edgeIndex": null
+                    },
+                    {
+                        "type": "fragment_step",
+                        "parts": [
+                            "Kill ",
+                            {
+                                "type": "kill",
+                                "value": "Justicar Casticus"
+                            },
+                            ", take ",
+                            {
+                                "type": "quest_text",
+                                "value": "Eyes of Zeal"
+                            }
+                        ],
+                        "subSteps": [],
+                        "edgeIndex": null
                     }
                 ],
-                "edgeIndex": null
+                "edgeIndex": 120
             },
             {
                 "type": "fragment_step",
@@ -3898,33 +3899,7 @@
                         "areaId": "1_5_7"
                     }
                 ],
-                "subSteps": [
-                    {
-                        "type": "fragment_step",
-                        "parts": [
-                            "Go ",
-                            {
-                                "type": "dir",
-                                "dirIndex": 5
-                            },
-                            " find the plaza"
-                        ],
-                        "subSteps": [],
-                        "edgeIndex": null
-                    },
-                    {
-                        "type": "fragment_step",
-                        "parts": [
-                            "Go ",
-                            {
-                                "type": "dir",
-                                "dirIndex": 4
-                            }
-                        ],
-                        "subSteps": [],
-                        "edgeIndex": null
-                    }
-                ],
+                "subSteps": [],
                 "edgeIndex": 131
             },
             {
