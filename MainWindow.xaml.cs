@@ -836,7 +836,8 @@ namespace MyPoeOverlay
                 for (int taskIndex = 0; taskIndex < actTasks.Length; taskIndex++)
                 {
                     JsonElement task = actTasks[taskIndex];
-                    string description = GetString(task, "name") ?? "";
+                    string description = FormatDirectionText(
+                        GetString(task, "name") ?? "");
                     string? enterAreaId = GetEnterAreaId(task);
 
                     List<string> waypointDestinations =
@@ -847,7 +848,7 @@ namespace MyPoeOverlay
                         description,
                         enterAreaId,
                         "",
-                        GetArenaName(task)));
+                        GetString(task, "zoneName")));
                     AddNestedRouteSteps(actName, task);
 
                     string? logoutTownAreaId = GetLogoutAreaId(task);
@@ -1068,14 +1069,14 @@ namespace MyPoeOverlay
                     {
                         result.Append(part.GetProperty("dirIndex").GetInt32() switch
                         {
-                            0 => "North",
-                            1 => "North-East",
-                            2 => "East",
-                            3 => "South-East",
-                            4 => "South",
-                            5 => "South-West",
-                            6 => "West",
-                            7 => "North-West",
+                            0 => "↑",
+                            1 => "↗",
+                            2 => "→",
+                            3 => "↘",
+                            4 => "↓",
+                            5 => "↙",
+                            6 => "←",
+                            7 => "↖",
                             _ => "direction"
                         });
                         break;
@@ -1104,7 +1105,7 @@ namespace MyPoeOverlay
                 }
             }
 
-            return result.ToString().Trim();
+            return FormatDirectionText(result.ToString().Trim());
         }
 
         private void AddNestedRouteSteps(
@@ -1121,10 +1122,10 @@ namespace MyPoeOverlay
             {
                 _steps.Add(new RouteStep(
                     actName,
-                    GetString(subTask, "name") ?? "",
+                    FormatDirectionText(GetString(subTask, "name") ?? ""),
                     GetEnterAreaId(subTask),
                     "",
-                    GetArenaName(subTask)));
+                    GetString(subTask, "zoneName")));
 
                 AddNestedRouteSteps(actName, subTask);
             }
@@ -1136,6 +1137,31 @@ namespace MyPoeOverlay
                    && value.ValueKind == JsonValueKind.String
                 ? value.GetString()
                 : null;
+        }
+
+        private static string FormatDirectionText(string text)
+        {
+            return System.Text.RegularExpressions.Regex.Replace(
+                text,
+                @"\b(?:(go)\s+)?(up-right|up-left|down-right|down-left|up|down|left|right)\b",
+                match =>
+                {
+                    string arrow = match.Groups[2].Value.ToLowerInvariant() switch
+                    {
+                        "up" => "↑",
+                        "up-right" => "↗",
+                        "right" => "→",
+                        "down-right" => "↘",
+                        "down" => "↓",
+                        "down-left" => "↙",
+                        "left" => "←",
+                        "up-left" => "↖",
+                        _ => match.Value
+                    };
+
+                    return match.Groups[1].Success ? arrow + " Go" : arrow;
+                },
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase);
         }
 
         private static string? GetEnterAreaId(JsonElement step)

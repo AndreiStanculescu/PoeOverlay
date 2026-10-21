@@ -77,6 +77,1479 @@
           {
             "name": "Take the Medicine Chest",
             "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Lioneye's Watch",
+        "areaId": "1_1_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Tarkleigh",
+            "subtasks": []
+          },
+          {
+            "name": "Hand in to Nessa",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Submerged Passage",
+            "waypointDestinationAreaId": "1_1_4_1",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Flooded Depths",
+        "areaId": "1_1_4_0",
+        "subtasks": [
+          {
+            "name": "Go right of the bridge",
+            "subtasks": []
+          },
+          {
+            "name": "Find and kill The Dweller of the Deep",
+            "subtasks": []
+          },
+          {
+            "name": "Take the boat",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Submerged Passage",
+        "areaId": "1_1_4_1",
+        "subtasks": []
+      },
+      {
+        "name": "The Ledge",
+        "areaId": "1_1_5",
+        "subtasks": []
+      },
+      {
+        "name": "The Climb",
+        "areaId": "1_1_6",
+        "subtasks": []
+      },
+      {
+        "name": "The Lower Prison",
+        "areaId": "1_1_7_1",
+        "subtasks": [
+          {
+            "name": "Waypoint to Lioneye's Watch",
+            "waypointDestinationAreaId": "1_1_town",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Lioneye's Watch",
+        "areaId": "1_1_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Tarkleigh",
+            "subtasks": []
+          },
+          {
+            "name": "Hand in to Nessa",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Lower Prison",
+            "waypointDestinationAreaId": "1_1_7_1",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Prison",
+        "areaId": "1_1_7_1",
+        "subtasks": [
+          {
+            "name": "Go up-right",
+            "subtasks": []
+          },
+          {
+            "name": "Complete the Trial of Ascendancy",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Upper Prison",
+        "areaId": "1_1_7_2",
+        "subtasks": []
+      },
+      {
+        "name": "The Warden's Quarters",
+        "zoneName": "The Warden's Quarters",
+        "subtasks": [
+          {
+            "name": "Kill Brutus",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Lioneye's Watch",
+        "areaId": "1_1_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Tarkleigh",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to Prisoner's Gate",
+            "waypointDestinationAreaId": "1_1_8",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Ship Graveyard",
+        "areaId": "1_1_9",
+        "subtasks": [
+          {
+            "name": "Go down the ledge next to the road",
+            "subtasks": []
+          },
+          {
+            "name": "Kill Fairgraves",
+            "subtasks": []
+          },
+          {
+            "name": "Take the Allflame",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Cavern of Wrath",
+        "areaId": "1_1_11_1",
+        "subtasks": [
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to Lioneye's Watch",
+            "waypointDestinationAreaId": "1_1_town",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Lioneye's Watch",
+        "areaId": "1_1_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Bestel",
+            "subtasks": []
+          },
+          {
+            "name": "Hand in to Nessa",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to Merveil's Caverns",
+            "waypointDestinationAreaId": "1_1_11_1",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Cavern of Anger",
+        "areaId": "1_1_11_2",
+        "subtasks": []
+      },
+      {
+        "name": "Merveil's Lair",
+        "zoneName": "Merveil's Lair",
+        "subtasks": [
+          {
+            "name": "Kill Merveil",
+            "subtasks": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Act 2",
+    "tasks": [
+      {
+        "name": "The Southern Forest",
+        "areaId": "1_2_1",
+        "subtasks": []
+      },
+      {
+        "name": "The Forest Encampment",
+        "areaId": "1_2_town",
+        "subtasks": []
+      },
+      {
+        "name": "The Old Fields",
+        "areaId": "1_2_2",
+        "subtasks": [
+          {
+            "name": "Go up-right",
+            "subtasks": []
+          },
+          {
+            "name": "Find the Den and place a portal",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Crossroads",
+        "areaId": "1_2_3",
+        "subtasks": [
+          {
+            "name": "Follow the road",
+            "subtasks": []
+          },
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Forest Encampment",
+            "waypointDestinationAreaId": "1_2_town",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Forest Encampment",
+        "areaId": "1_2_town",
+        "subtasks": [
+          {
+            "name": "Take your own portal",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Old Fields",
+        "areaId": "1_2_2",
+        "subtasks": [
+          {
+            "name": "Go up-right",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Den",
+        "areaId": "1_2_2a",
+        "subtasks": [
+          {
+            "name": "Find and kill the Great White Beast",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Forest Encampment",
+        "areaId": "1_2_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Yeena",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Crossroads",
+            "waypointDestinationAreaId": "1_2_3",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Crossroads",
+        "areaId": "1_2_3",
+        "subtasks": [
+          {
+            "name": "Go up-left",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Chamber of Sins Level 1",
+        "areaId": "1_2_6_1",
+        "subtasks": []
+      },
+      {
+        "name": "The Chamber of Sins Level 2",
+        "areaId": "1_2_6_2",
+        "subtasks": [
+          {
+            "name": "Go in the same direction as the waypoint",
+            "subtasks": []
+          },
+          {
+            "name": "Complete the Trial of Ascendancy",
+            "subtasks": []
+          },
+          {
+            "name": "Kill Fidelitas and take the Baleful Gem",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Forest Encampment",
+        "areaId": "1_2_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Greust",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Crossroads",
+            "waypointDestinationAreaId": "1_2_3",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Crossroads",
+        "areaId": "1_2_3",
+        "subtasks": [
+          {
+            "name": "Go down-right",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Fellshrine Ruins",
+        "areaId": "1_2_15",
+        "subtasks": [
+          {
+            "name": "Follow the road",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Crypt Level 1",
+        "areaId": "1_2_5_1",
+        "subtasks": [
+          {
+            "name": "Complete the Trial of Ascendancy",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Crypt Level 2",
+        "areaId": "1_2_5_2",
+        "subtasks": [
+          {
+            "name": "Find the altar and take the Golden Hand",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Forest Encampment",
+        "areaId": "1_2_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Yeena",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Riverways",
+            "waypointDestinationAreaId": "1_2_7",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Riverways",
+        "areaId": "1_2_7",
+        "subtasks": [
+          {
+            "name": "Go down-left",
+            "subtasks": []
+          },
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Western Forest",
+        "areaId": "1_2_9",
+        "subtasks": [
+          {
+            "name": "Follow the road",
+            "subtasks": []
+          },
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          },
+          {
+            "name": "Search the side of the road opposite the waypoint",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Weaver's Chambers",
+        "areaId": "1_2_10",
+        "subtasks": [
+          {
+            "name": "Go left; if blocked, go up-right",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Weaver's Nest",
+        "zoneName": "The Weaver's Nest",
+        "subtasks": [
+          {
+            "name": "Kill the Weaver and take Maligaro's Spike",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Forest Encampment",
+        "areaId": "1_2_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Silk",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Crossroads",
+            "waypointDestinationAreaId": "1_2_3",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Crossroads",
+        "areaId": "1_2_3",
+        "subtasks": [
+          {
+            "name": "Go up-right",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Broken Bridge",
+        "areaId": "1_2_4",
+        "subtasks": [
+          {
+            "name": "Follow the road",
+            "subtasks": []
+          },
+          {
+            "name": "Kill Kraityn and take Kraityn's Amulet",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Forest Encampment",
+        "areaId": "1_2_town",
+        "subtasks": [
+          {
+            "name": "Waypoint to The Riverways",
+            "waypointDestinationAreaId": "1_2_7",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Riverways",
+        "areaId": "1_2_7",
+        "subtasks": []
+      },
+      {
+        "name": "The Wetlands",
+        "areaId": "1_2_12",
+        "subtasks": [
+          {
+            "name": "Kill Oak and take Oak's Amulet",
+            "subtasks": []
+          },
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Western Forest",
+            "waypointDestinationAreaId": "1_2_9",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Western Forest",
+        "areaId": "1_2_9",
+        "subtasks": [
+          {
+            "name": "Go down",
+            "subtasks": []
+          },
+          {
+            "name": "Help Alira and take the Apex",
+            "subtasks": []
+          },
+          {
+            "name": "Go down-left",
+            "subtasks": []
+          },
+          {
+            "name": "Kill Captain Arteri, take the Emblem, and activate the seal",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Forest Encampment",
+        "areaId": "1_2_town",
+        "subtasks": [
+          {
+            "name": "Waypoint to Lioneye's Watch (Act 1)",
+            "waypointDestinationAreaId": "1_1_town",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Lioneye's Watch",
+        "areaId": "1_1_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Bestel",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Wetlands (Act 2)",
+            "waypointDestinationAreaId": "1_2_12",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Wetlands",
+        "areaId": "1_2_12",
+        "subtasks": [
+          {
+            "name": "Poison the roots",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Vaal Ruins",
+        "areaId": "1_2_11",
+        "subtasks": [
+          {
+            "name": "An S- or L-shape leads to the exit",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Northern Forest",
+        "areaId": "1_2_8",
+        "subtasks": []
+      },
+      {
+        "name": "The Caverns",
+        "areaId": "1_2_14_2",
+        "subtasks": []
+      },
+      {
+        "name": "The Ancient Pyramid",
+        "areaId": "1_2_14_3",
+        "subtasks": []
+      },
+      {
+        "name": "Pyramid Apex",
+        "zoneName": "Pyramid Apex",
+        "subtasks": [
+          {
+            "name": "Kill the Vaal Oversoul",
+            "subtasks": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Act 3",
+    "tasks": [
+      {
+        "name": "The City of Sarn",
+        "areaId": "1_3_1",
+        "subtasks": [
+          {
+            "name": "Help and talk to Clarissa",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Sarn Encampment",
+        "areaId": "1_3_town",
+        "subtasks": []
+      },
+      {
+        "name": "The Slums",
+        "areaId": "1_3_2",
+        "subtasks": [
+          {
+            "name": "Go up",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Crematorium",
+        "areaId": "1_3_3_1",
+        "subtasks": [
+          {
+            "name": "Complete the Trial of Ascendancy",
+            "subtasks": []
+          },
+          {
+            "name": "Kill Piety and take Tolman's Bracelet",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Sarn Encampment",
+        "areaId": "1_3_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Clarissa and take the Sewer Keys",
+            "subtasks": []
+          },
+          {
+            "name": "Hand in to Maramoa",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Slums",
+        "areaId": "1_3_2",
+        "subtasks": [
+          {
+            "name": "Go up",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Sewers",
+        "areaId": "1_3_10_1",
+        "subtasks": [
+          {
+            "name": "Find 3 Platinum Busts",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Marketplace",
+        "areaId": "1_3_5",
+        "subtasks": [
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Catacombs",
+        "areaId": "1_3_6",
+        "subtasks": [
+          {
+            "name": "Complete the Trial of Ascendancy",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Sarn Encampment",
+        "areaId": "1_3_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Hargan",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Marketplace",
+            "waypointDestinationAreaId": "1_3_5",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Marketplace",
+        "areaId": "1_3_5",
+        "subtasks": [
+          {
+            "name": "Go up",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Battlefront",
+        "areaId": "1_3_7",
+        "subtasks": [
+          {
+            "name": "Go up-left",
+            "subtasks": []
+          },
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          },
+          {
+            "name": "Go down-left",
+            "subtasks": []
+          },
+          {
+            "name": "Take the Ribbon Spool",
+            "subtasks": []
+          },
+          {
+            "name": "Go up-right",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Solaris Temple Level 1",
+        "areaId": "1_3_8_1",
+        "subtasks": []
+      },
+      {
+        "name": "The Solaris Temple Level 2",
+        "areaId": "1_3_8_2",
+        "subtasks": []
+      },
+      {
+        "name": "The Eternal Laboratory",
+        "zoneName": "The Eternal Laboratory",
+        "subtasks": [
+          {
+            "name": "Get the crafting recipe",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Battlefront",
+            "waypointDestinationAreaId": "1_3_7",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Battlefront",
+        "areaId": "1_3_7",
+        "subtasks": [
+          {
+            "name": "Go up-left",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Docks",
+        "areaId": "1_3_9",
+        "subtasks": [
+          {
+            "name": "Take the Thaumetic Sulphite",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Sarn Encampment",
+        "areaId": "1_3_town",
+        "subtasks": [
+          {
+            "name": "Waypoint to The Solaris Temple Level 2",
+            "waypointDestinationAreaId": "1_3_8_2",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Solaris Temple Level 2",
+        "areaId": "1_3_8_2",
+        "subtasks": [
+          {
+            "name": "Talk to Dialla",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Sewers",
+            "waypointDestinationAreaId": "1_3_10_1",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Sewers",
+        "areaId": "1_3_10_1",
+        "subtasks": [
+          {
+            "name": "Burn the Undying Blockage",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Ebony Barracks",
+        "areaId": "1_3_13",
+        "subtasks": [
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Lunaris Temple Level 1",
+        "areaId": "1_3_14_1",
+        "subtasks": []
+      },
+      {
+        "name": "The Lunaris Temple Level 2",
+        "areaId": "1_3_14_2",
+        "subtasks": [
+          {
+            "name": "Follow the stairs going upstairs",
+            "subtasks": []
+          },
+          {
+            "name": "Kill Piety and take the Tower Key",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Sarn Encampment",
+        "areaId": "1_3_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Grigor",
+            "subtasks": []
+          },
+          {
+            "name": "Hand in to Maramoa",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Ebony Barracks",
+            "waypointDestinationAreaId": "1_3_13",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Ebony Barracks",
+        "areaId": "1_3_13",
+        "subtasks": [
+          {
+            "name": "Go up-right",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Imperial Gardens",
+        "areaId": "1_3_15",
+        "subtasks": [
+          {
+            "name": "Follow the road",
+            "subtasks": []
+          },
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          },
+          {
+            "name": "Go up",
+            "subtasks": []
+          },
+          {
+            "name": "Complete the Trial of Ascendancy",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Sarn Encampment",
+        "areaId": "1_3_town",
+        "subtasks": [
+          {
+            "name": "Waypoint to The Imperial Gardens",
+            "waypointDestinationAreaId": "1_3_15",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Imperial Gardens",
+        "areaId": "1_3_15",
+        "subtasks": []
+      },
+      {
+        "name": "The Sceptre of God",
+        "areaId": "1_3_18_1",
+        "subtasks": []
+      },
+      {
+        "name": "The Upper Sceptre of God",
+        "areaId": "1_3_18_2",
+        "subtasks": []
+      },
+      {
+        "name": "Tower Rooftop",
+        "zoneName": "Tower Rooftop",
+        "subtasks": [
+          {
+            "name": "Kill Dominus",
+            "subtasks": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Act 4",
+    "tasks": [
+      {
+        "name": "The Aqueduct",
+        "areaId": "1_4_1",
+        "subtasks": []
+      },
+      {
+        "name": "Highgate",
+        "areaId": "1_4_town",
+        "subtasks": []
+      },
+      {
+        "name": "The Dried Lake",
+        "areaId": "1_4_2",
+        "subtasks": [
+          {
+            "name": "Kill Voll and take Deshret's Banner",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Highgate",
+        "areaId": "1_4_town",
+        "subtasks": [
+          {
+            "name": "Break Deshret's Seal",
+            "subtasks": []
+          },
+          {
+            "name": "Hand in to Oyun",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Mines Level 1",
+        "areaId": "1_4_3_1",
+        "subtasks": []
+      },
+      {
+        "name": "The Mines Level 2",
+        "areaId": "1_4_3_2",
+        "subtasks": [
+          {
+            "name": "Free Deshret",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Crystal Veins",
+        "areaId": "1_4_3_3",
+        "subtasks": [
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to Highgate",
+            "waypointDestinationAreaId": "1_4_town",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Highgate",
+        "areaId": "1_4_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Tasuni",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Sarn Encampment (Act 3)",
+            "waypointDestinationAreaId": "1_3_town",
+            "subtasks": []
+          },
+          {
+            "name": "Ascend",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Crystal Veins",
+        "areaId": "1_4_3_3",
+        "subtasks": []
+      },
+      {
+        "name": "Daresso's Dream",
+        "areaId": "1_4_5_1",
+        "subtasks": []
+      },
+      {
+        "name": "The Grand Arena",
+        "areaId": "1_4_5_2",
+        "subtasks": [
+          {
+            "name": "Follow the exits, keeping left",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Ring of Blades",
+        "zoneName": "The Ring of Blades",
+        "subtasks": [
+          {
+            "name": "Kill Daresso and take the Eye of Desire",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Highgate",
+        "areaId": "1_4_town",
+        "subtasks": [
+          {
+            "name": "Waypoint to The Crystal Veins",
+            "waypointDestinationAreaId": "1_4_3_3",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Crystal Veins",
+        "areaId": "1_4_3_3",
+        "subtasks": [
+          {
+            "name": "Talk to Dialla",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Belly of the Beast Level 1",
+        "areaId": "1_4_6_1",
+        "subtasks": []
+      },
+      {
+        "name": "The Belly of the Beast Level 2",
+        "areaId": "1_4_6_2",
+        "subtasks": []
+      },
+      {
+        "name": "The Bowels of the Beast",
+        "zoneName": "The Bowels of the Beast",
+        "subtasks": [
+          {
+            "name": "Kill Piety",
+            "subtasks": []
+          },
+          {
+            "name": "Talk to Piety",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Harvest",
+        "areaId": "1_4_6_3",
+        "subtasks": [
+          {
+            "name": "Kill Doedre",
+            "subtasks": []
+          },
+          {
+            "name": "Kill Maligaro",
+            "subtasks": []
+          },
+          {
+            "name": "Kill Shavronne",
+            "subtasks": []
+          },
+          {
+            "name": "Hand in to Piety",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Black Core",
+        "zoneName": "The Black Core",
+        "subtasks": [
+          {
+            "name": "Kill Malachai",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Highgate",
+        "areaId": "1_4_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Dialla",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Ascent",
+        "areaId": "1_4_7",
+        "subtasks": [
+          {
+            "name": "Activate the Resonator and take the Oriath portal",
+            "subtasks": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Act 5",
+    "tasks": [
+      {
+        "name": "The Slave Pens",
+        "areaId": "1_5_1",
+        "subtasks": [
+          {
+            "name": "Go down, then left",
+            "subtasks": []
+          },
+          {
+            "name": "Kill Overseer Krow",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Overseer's Tower",
+        "areaId": "1_5_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Lani",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Control Blocks",
+        "areaId": "1_5_2",
+        "subtasks": [
+          {
+            "name": "Go left",
+            "subtasks": []
+          },
+          {
+            "name": "Take the Miasmeter",
+            "subtasks": []
+          },
+          {
+            "name": "Go up-right",
+            "subtasks": []
+          },
+          {
+            "name": "Kill Justicar Casticus and take the Eyes of Zeal",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Oriath Square",
+        "areaId": "1_5_3",
+        "subtasks": [
+          {
+            "name": "Go up-right",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Templar Courts",
+        "areaId": "1_5_4",
+        "subtasks": []
+      },
+      {
+        "name": "The Chamber of Innocence",
+        "areaId": "1_5_5",
+        "subtasks": [
+          {
+            "name": "Loop around clockwise",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Sanctum of Innocence",
+        "zoneName": "The Sanctum of Innocence",
+        "subtasks": [
+          {
+            "name": "Kill High Templar Avarius",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Overseer's Tower",
+        "areaId": "1_5_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Lani",
+            "subtasks": []
+          },
+          {
+            "name": "Hand in to Vilenta",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Chamber of Innocence",
+            "waypointDestinationAreaId": "1_5_5",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Chamber of Innocence",
+        "areaId": "1_5_5",
+        "subtasks": []
+      },
+      {
+        "name": "The Torched Courts",
+        "areaId": "1_5_4b",
+        "subtasks": [
+          {
+            "name": "Loop around counter-clockwise",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Ruined Square",
+        "areaId": "1_5_3b",
+        "subtasks": [
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Ossuary",
+        "areaId": "1_5_6",
+        "subtasks": [
+          {
+            "name": "Take the Sign of Purity",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Overseer's Tower",
+        "areaId": "1_5_town",
+        "subtasks": [
+          {
+            "name": "Waypoint to The Ruined Square",
+            "waypointDestinationAreaId": "1_5_3b",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Ruined Square",
+        "areaId": "1_5_3b",
+        "subtasks": [
+          {
+            "name": "Go down",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Reliquary",
+        "areaId": "1_5_7",
+        "subtasks": [
+          {
+            "name": "Search the corners of the map",
+            "subtasks": []
+          },
+          {
+            "name": "Find 3 Kitava's Torments",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Overseer's Tower",
+        "areaId": "1_5_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Lani",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Ruined Square",
+            "waypointDestinationAreaId": "1_5_3b",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Ruined Square",
+        "areaId": "1_5_3b",
+        "subtasks": [
+          {
+            "name": "Go down-left",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Cathedral Rooftop",
+        "areaId": "1_5_8",
+        "subtasks": [
+          {
+            "name": "Go up-left",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Cathedral Apex",
+        "zoneName": "The Cathedral Apex",
+        "subtasks": [
+          {
+            "name": "Kill Kitava",
+            "subtasks": []
+          },
+          {
+            "name": "Talk to Lily",
+            "subtasks": []
+          },
+          {
+            "name": "Sail to Wraeclast",
+            "subtasks": []
           }
         ]
       }

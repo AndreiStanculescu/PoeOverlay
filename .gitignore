@@ -1,3 +1,4 @@
 /MyPoeOverlay.exe
 bin/
 obj/
+.DS_Store
