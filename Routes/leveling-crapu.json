@@ -1554,5 +1554,294 @@
         ]
       }
     ]
+  },
+  {
+    "name": "Act 6",
+    "tasks": [
+      {
+        "name": "Lioneye's Watch",
+        "areaId": "2_6_town",
+        "subtasks": []
+      },
+      {
+        "name": "The Twilight Strand",
+        "areaId": "2_6_1",
+        "subtasks": [
+          {
+            "name": "Kill everything",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Lioneye's Watch",
+        "areaId": "2_6_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Lilly Roth",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Coast",
+        "areaId": "2_6_2",
+        "subtasks": []
+      },
+      {
+        "name": "The Mud Flats",
+        "areaId": "2_6_4",
+        "subtasks": [
+          {
+            "name": "Go up-right",
+            "subtasks": []
+          },
+          {
+            "name": "Kill the Dishonoured Queen and take the Eye of Conquest",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Karui Fortress",
+        "areaId": "2_6_5",
+        "subtasks": []
+      },
+      {
+        "name": "Tukohama's Keep",
+        "zoneName": "Tukohama's Keep",
+        "subtasks": [
+          {
+            "name": "Go up-right",
+            "subtasks": []
+          },
+          {
+            "name": "Kill Tukohama",
+            "subtasks": []
+          },
+          {
+            "name": "Go up",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Ridge",
+        "areaId": "2_6_6",
+        "subtasks": [
+          {
+            "name": "Go up",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Lower Prison",
+        "areaId": "2_6_7_1",
+        "subtasks": [
+          {
+            "name": "Complete the Trial of Ascendancy",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Shavronne's Tower",
+        "areaId": "2_6_7_2",
+        "subtasks": []
+      },
+      {
+        "name": "The Prison Rooftop",
+        "zoneName": "The Prison Rooftop",
+        "subtasks": [
+          {
+            "name": "Kill Shavronne",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Warden's Chambers",
+        "zoneName": "The Warden's Chambers",
+        "subtasks": []
+      },
+      {
+        "name": "Prisoner's Gate",
+        "areaId": "2_6_8",
+        "subtasks": []
+      },
+      {
+        "name": "The Valley of the Fire Drinker",
+        "zoneName": "The Valley of the Fire Drinker",
+        "subtasks": [
+          {
+            "name": "Kill Abberath",
+            "subtasks": []
+          },
+          {
+            "name": "Portal",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Lioneye's Watch",
+        "areaId": "2_6_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Bestel",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to Prisoner's Gate",
+            "waypointDestinationAreaId": "2_6_8",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Prisoner's Gate",
+        "areaId": "2_6_8",
+        "subtasks": []
+      },
+      {
+        "name": "The Western Forest",
+        "areaId": "2_6_9",
+        "subtasks": [
+          {
+            "name": "Follow the road",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Riverways",
+        "areaId": "2_6_10",
+        "subtasks": [
+          {
+            "name": "Follow the road",
+            "subtasks": []
+          },
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Wetlands",
+        "areaId": "2_6_11",
+        "subtasks": [
+          {
+            "name": "Go up-left",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Spawning Ground",
+        "zoneName": "The Spawning Ground",
+        "subtasks": [
+          {
+            "name": "Kill Ryslatha",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Lioneye's Watch",
+        "areaId": "2_6_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Tarkleigh",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Riverways",
+            "waypointDestinationAreaId": "2_6_10",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Riverways",
+        "areaId": "2_6_10",
+        "subtasks": [
+          {
+            "name": "Go down-right",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Southern Forest",
+        "areaId": "2_6_12",
+        "subtasks": [
+          {
+            "name": "Follow the road",
+            "subtasks": []
+          },
+          {
+            "name": "Go down-right",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Cavern of Anger",
+        "areaId": "2_6_13",
+        "subtasks": [
+          {
+            "name": "Take the Black Flag",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Beacon",
+        "areaId": "2_6_14",
+        "subtasks": [
+          {
+            "name": "Complete the pillar push",
+            "subtasks": []
+          },
+          {
+            "name": "Light the Beacon",
+            "subtasks": []
+          },
+          {
+            "name": "Talk to Weylam Roth",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Brine King's Throne",
+        "zoneName": "The Brine King's Throne",
+        "subtasks": [
+          {
+            "name": "Kill Tsoagoth",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Lioneye's Watch",
+        "areaId": "2_6_town",
+        "subtasks": []
+      }
+    ]
   }
 ]
