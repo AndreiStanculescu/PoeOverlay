@@ -817,7 +817,7 @@ namespace MyPoeOverlay
         private void LoadRoute()
         {
             string path = Path.Combine(
-                AppContext.BaseDirectory, "Routes", "leveling.json");
+                AppContext.BaseDirectory, "Routes", "leveling-crapu.json");
 
             using JsonDocument doc = JsonDocument.Parse(
                 File.ReadAllText(path));
@@ -830,35 +830,30 @@ namespace MyPoeOverlay
                 string actName = act.GetProperty("name").GetString()
                                  ?? "Unknown act";
 
-                JsonElement[] actSteps =
-                    act.GetProperty("steps").EnumerateArray().ToArray();
+                JsonElement[] actTasks =
+                    act.GetProperty("tasks").EnumerateArray().ToArray();
 
-                for (int stepIndex = 0; stepIndex < actSteps.Length; stepIndex++)
+                for (int taskIndex = 0; taskIndex < actTasks.Length; taskIndex++)
                 {
-                    JsonElement step = actSteps[stepIndex];
-
-                    if (!step.TryGetProperty("parts", out JsonElement parts))
-                        continue;
-
-                    string description = RenderParts(parts);
-                    string? enterAreaId = GetEnterAreaId(step);
-                    string? arenaName = GetArenaName(step);
+                    JsonElement task = actTasks[taskIndex];
+                    string description = GetString(task, "name") ?? "";
+                    string? enterAreaId = GetEnterAreaId(task);
 
                     List<string> waypointDestinations =
-                        GetWaypointDestinations(step);
+                        GetWaypointDestinations(task);
 
                     _steps.Add(new RouteStep(
                         actName,
                         description,
                         enterAreaId,
                         "",
-                        arenaName));
-                        AddNestedRouteSteps(actName, step);
+                        GetArenaName(task)));
+                    AddNestedRouteSteps(actName, task);
 
-                    string? logoutTownAreaId = GetLogoutAreaId(step);
+                    string? logoutTownAreaId = GetLogoutAreaId(task);
                     string? nextStepEnterAreaId =
-                        stepIndex + 1 < actSteps.Length
-                            ? GetEnterAreaId(actSteps[stepIndex + 1])
+                        taskIndex + 1 < actTasks.Length
+                            ? GetEnterAreaId(actTasks[taskIndex + 1])
                             : null;
 
                     if (logoutTownAreaId != null &&
@@ -1116,32 +1111,22 @@ namespace MyPoeOverlay
             string actName,
             JsonElement step)
         {
-            if (!step.TryGetProperty("subSteps", out JsonElement subSteps) ||
-                subSteps.ValueKind != JsonValueKind.Array)
+            if (!step.TryGetProperty("subtasks", out JsonElement subTasks) ||
+                subTasks.ValueKind != JsonValueKind.Array)
             {
                 return;
             }
 
-            foreach (JsonElement subStep in subSteps.EnumerateArray())
+            foreach (JsonElement subTask in subTasks.EnumerateArray())
             {
-                if (subStep.TryGetProperty("parts", out JsonElement parts) &&
-                    parts.ValueKind == JsonValueKind.Array)
-                {
-                    string? arenaName = GetArenaName(subStep);
+                _steps.Add(new RouteStep(
+                    actName,
+                    GetString(subTask, "name") ?? "",
+                    GetEnterAreaId(subTask),
+                    "",
+                    GetArenaName(subTask)));
 
-                    _steps.Add(new RouteStep(
-                        actName,
-                        RenderParts(parts),
-                        GetEnterAreaId(subStep),
-                        "",
-                        arenaName));
-
-                        AddNestedRouteSteps(actName, subStep);
-                }
-                else
-                {
-                    AddNestedRouteSteps(actName, subStep);
-                }
+                AddNestedRouteSteps(actName, subTask);
             }
         }
 
@@ -1155,6 +1140,10 @@ namespace MyPoeOverlay
 
         private static string? GetEnterAreaId(JsonElement step)
         {
+            string? areaId = GetString(step, "areaId");
+            if (!string.IsNullOrWhiteSpace(areaId))
+                return areaId;
+
             if (!step.TryGetProperty("parts", out JsonElement parts) ||
                 parts.ValueKind != JsonValueKind.Array)
             {
@@ -1225,6 +1214,16 @@ namespace MyPoeOverlay
         private static void CollectWaypointDestinations(
             JsonElement step, List<string> destinations)
         {
+            string? waypointDestination =
+                GetString(step, "waypointDestinationAreaId");
+            if (!string.IsNullOrWhiteSpace(waypointDestination) &&
+                !destinations.Contains(
+                    waypointDestination,
+                    StringComparer.OrdinalIgnoreCase))
+            {
+                destinations.Add(waypointDestination);
+            }
+
             if (step.TryGetProperty("parts", out JsonElement parts) &&
                 parts.ValueKind == JsonValueKind.Array)
             {
@@ -1248,11 +1247,11 @@ namespace MyPoeOverlay
                 }
             }
 
-            if (step.TryGetProperty("subSteps", out JsonElement subSteps) &&
-                subSteps.ValueKind == JsonValueKind.Array)
+            if (step.TryGetProperty("subtasks", out JsonElement subTasks) &&
+                subTasks.ValueKind == JsonValueKind.Array)
             {
-                foreach (JsonElement subStep in subSteps.EnumerateArray())
-                    CollectWaypointDestinations(subStep, destinations);
+                foreach (JsonElement subTask in subTasks.EnumerateArray())
+                    CollectWaypointDestinations(subTask, destinations);
             }
         }
 
