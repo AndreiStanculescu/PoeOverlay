@@ -39,7 +39,7 @@
             "name": "Find 3 Glyphs",
             "subtasks": [
               {
-                "name": "They usually form a triangle; rarely, a line",
+                "name": "They usually form a triangle; rarely a line",
                 "subtasks": []
               }
             ]

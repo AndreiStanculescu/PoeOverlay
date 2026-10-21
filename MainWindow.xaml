@@ -1,6 +1,7 @@
 <Window x:Class="MyPoeOverlay.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:MyPoeOverlay"
         Icon="PoeOverlay.ico"
         Title="Main Overlay"
         Width="390"
@@ -846,11 +847,13 @@
                                                                    Foreground="{Binding MarkerBrush}"
                                                                    FontSize="{Binding FontSize}"
                                                                    FontWeight="Bold"
+                                                                   VerticalAlignment="Center"
                                                                    Margin="0,0,7,0"/>
-                                                        <TextBlock Text="{Binding Description}"
-                                                                   Foreground="{Binding TextBrush}"
-                                                                   FontSize="{Binding FontSize}"
-                                                                   TextWrapping="Wrap"/>
+                                                        <local:DirectionTextBlock
+                                                            FormattedText="{Binding Description}"
+                                                            Foreground="{Binding TextBrush}"
+                                                            FontSize="{Binding FontSize}"
+                                                            TextWrapping="Wrap"/>
                                                     </DockPanel>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>

@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Diagnostics;
@@ -20,6 +22,59 @@ using System.Windows.Interop;
 
 namespace MyPoeOverlay
 {
+    public sealed class DirectionTextBlock : TextBlock
+    {
+        public static readonly DependencyProperty FormattedTextProperty =
+            DependencyProperty.Register(
+                nameof(FormattedText),
+                typeof(string),
+                typeof(DirectionTextBlock),
+                new PropertyMetadata("", OnFormattedTextChanged));
+
+        public string FormattedText
+        {
+            get => (string)GetValue(FormattedTextProperty);
+            set => SetValue(FormattedTextProperty, value);
+        }
+
+        private static void OnFormattedTextChanged(
+            DependencyObject dependencyObject,
+            DependencyPropertyChangedEventArgs e)
+        {
+            var textBlock = (DirectionTextBlock)dependencyObject;
+            string text = e.NewValue as string ?? "";
+            textBlock.Margin = text.Any(IsDirectionArrow)
+                ? new Thickness(0, -5, 0, 0)
+                : new Thickness(0);
+            textBlock.Inlines.Clear();
+
+            int segmentStart = 0;
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (!IsDirectionArrow(text[i]))
+                    continue;
+
+                if (i > segmentStart)
+                    textBlock.Inlines.Add(new Run(text[segmentStart..i]));
+
+                textBlock.Inlines.Add(new Run(text[i..(i + 1)])
+                {
+                    FontSize = Math.Max(
+                        textBlock.FontSize * 1.4,
+                        textBlock.FontSize + 4),
+                    FontWeight = FontWeights.ExtraBold
+                });
+                segmentStart = i + 1;
+            }
+
+            if (segmentStart < text.Length)
+                textBlock.Inlines.Add(new Run(text[segmentStart..]));
+        }
+
+        private static bool IsDirectionArrow(char character) =>
+            character is '↑' or '↗' or '→' or '↘' or '↓' or '↙' or '←' or '↖';
+    }
+
     public partial class MainWindow : Window
     {
         private const int MaxAutomaticTaskSkip = 2;
@@ -1159,7 +1214,7 @@ namespace MyPoeOverlay
                         _ => match.Value
                     };
 
-                    return match.Groups[1].Success ? arrow + " Go" : arrow;
+                    return match.Groups[1].Success ? "Go " + arrow : arrow;
                 },
                 System.Text.RegularExpressions.RegexOptions.IgnoreCase);
         }
@@ -1324,25 +1379,38 @@ namespace MyPoeOverlay
 
         private void ProcessLogLine(string line)
         {
-            const string marker = "You have entered ";
-
-            int start = line.IndexOf(
-                marker, StringComparison.OrdinalIgnoreCase);
-
-            if (start < 0)
+            if (!TryGetEnteredAreaName(line, out string areaName))
                 return;
-
-            string areaName = line[(start + marker.Length)..].Trim();
-
-            // Eliminăm punctul final din mesajul Client.txt.
-            if (areaName.EndsWith(".", StringComparison.Ordinal))
-                areaName = areaName[..^1];
 
             Dispatcher.Invoke(() =>
             {
                 ClientLogStatus.Text = "Detected area: " + areaName;
                 AdvanceForArea(areaName);
             });
+        }
+
+        private static bool TryGetEnteredAreaName(
+            string line,
+            out string areaName)
+        {
+            const string marker = "You have entered ";
+
+            int start = line.IndexOf(
+                marker, StringComparison.OrdinalIgnoreCase);
+
+            if (start < 0)
+            {
+                areaName = "";
+                return false;
+            }
+
+            areaName = line[(start + marker.Length)..].Trim();
+
+            // Eliminăm punctul final din mesajul Client.txt.
+            if (areaName.EndsWith(".", StringComparison.Ordinal))
+                areaName = areaName[..^1];
+
+            return !string.IsNullOrWhiteSpace(areaName);
         }
 
 
