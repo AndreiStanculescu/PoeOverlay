@@ -872,7 +872,7 @@ namespace MyPoeOverlay
         private void LoadRoute()
         {
             string path = Path.Combine(
-                AppContext.BaseDirectory, "Routes", "leveling-crapu.json");
+                AppContext.BaseDirectory, "Routes", "leveling.json");
 
             using JsonDocument doc = JsonDocument.Parse(
                 File.ReadAllText(path));
