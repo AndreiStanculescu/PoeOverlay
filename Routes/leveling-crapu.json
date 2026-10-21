@@ -1843,5 +1843,634 @@
         "subtasks": []
       }
     ]
+  },
+  {
+    "name": "Act 7",
+    "tasks": [
+      {
+        "name": "The Bridge Encampment",
+        "areaId": "2_7_town",
+        "subtasks": []
+      },
+      {
+        "name": "The Broken Bridge",
+        "areaId": "2_7_1",
+        "subtasks": [
+          {
+            "name": "Follow the road",
+            "subtasks": []
+          },
+          {
+            "name": "Take the Silver Locket",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Crossroads",
+        "areaId": "2_7_2",
+        "subtasks": [
+          {
+            "name": "Follow the road",
+            "subtasks": []
+          },
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          },
+          {
+            "name": "Go down-right",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Fellshrine Ruins",
+        "areaId": "2_7_3",
+        "subtasks": [
+          {
+            "name": "Follow the road",
+            "subtasks": []
+          },
+          {
+            "name": "Go down-right",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Crypt",
+        "areaId": "2_7_4",
+        "subtasks": [
+          {
+            "name": "Complete the Trial of Ascendancy",
+            "subtasks": []
+          },
+          {
+            "name": "Find the sarcophagus for the next floor",
+            "subtasks": []
+          },
+          {
+            "name": "Take Maligaro's Map",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Bridge Encampment",
+        "areaId": "2_7_town",
+        "subtasks": [
+          {
+            "name": "Waypoint to The Crossroads",
+            "waypointDestinationAreaId": "2_7_2",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Crossroads",
+        "areaId": "2_7_2",
+        "subtasks": [
+          {
+            "name": "Go up-left",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Chamber of Sins Level 1",
+        "areaId": "2_7_5_1",
+        "subtasks": [
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          },
+          {
+            "name": "Activate the map device",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Maligaro's Sanctum",
+        "areaId": "2_7_5_map",
+        "subtasks": []
+      },
+      {
+        "name": "Maligaro's Workshop",
+        "zoneName": "Maligaro's Workshop",
+        "subtasks": [
+          {
+            "name": "Kill Maligaro and take the Black Venom",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Bridge Encampment",
+        "areaId": "2_7_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Helena",
+            "subtasks": []
+          },
+          {
+            "name": "Hand in to Weylam Roth",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Chamber of Sins",
+            "waypointDestinationAreaId": "2_7_5_1",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Chamber of Sins Level 1",
+        "areaId": "2_7_5_1",
+        "subtasks": [
+          {
+            "name": "Hand in to Silk and take the Obsidian Key",
+            "subtasks": []
+          },
+          {
+            "name": "Go in the same direction as the waypoint",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Chamber of Sins Level 2",
+        "areaId": "2_7_5_2",
+        "subtasks": [
+          {
+            "name": "Complete the Trial of Ascendancy",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Den",
+        "areaId": "2_7_6",
+        "subtasks": []
+      },
+      {
+        "name": "The Ashen Fields",
+        "areaId": "2_7_7",
+        "subtasks": [
+          {
+            "name": "Follow the road",
+            "subtasks": []
+          },
+          {
+            "name": "Go down-left",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Forest Encampment",
+        "areaId": "1_2_town",
+        "subtasks": [
+          {
+            "name": "Kill Greust",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Northern Forest",
+        "areaId": "2_7_8",
+        "subtasks": [
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Causeway",
+        "areaId": "2_7_10",
+        "subtasks": [
+          {
+            "name": "Take Kishara's Star",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Vaal City",
+        "areaId": "2_7_11",
+        "subtasks": [
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Northern Forest",
+            "waypointDestinationAreaId": "2_7_8",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Northern Forest",
+        "areaId": "2_7_8",
+        "subtasks": []
+      },
+      {
+        "name": "The Dread Thicket",
+        "areaId": "2_7_9",
+        "subtasks": [
+          {
+            "name": "Take 7 Fireflies",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Den of Despair",
+        "zoneName": "The Den of Despair",
+        "subtasks": [
+          {
+            "name": "Kill Gruthkul",
+            "subtasks": []
+          },
+          {
+            "name": "Portal",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Bridge Encampment",
+        "areaId": "2_7_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Eramir",
+            "subtasks": []
+          },
+          {
+            "name": "Hand in to Weylam Roth",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to the Aspirant's Plaza",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Ascend",
+        "subtasks": []
+      },
+      {
+        "name": "The Vaal City",
+        "areaId": "2_7_11",
+        "subtasks": [
+          {
+            "name": "Hand in the quest",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Temple of Decay Level 1",
+        "areaId": "2_7_12_1",
+        "subtasks": []
+      },
+      {
+        "name": "The Temple of Decay Level 2",
+        "areaId": "2_7_12_2",
+        "subtasks": []
+      },
+      {
+        "name": "Arakaali's Web",
+        "zoneName": "Arakaali's Web",
+        "subtasks": [
+          {
+            "name": "Kill Arakaali",
+            "subtasks": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Act 8",
+    "tasks": [
+      {
+        "name": "The Sarn Ramparts",
+        "areaId": "2_8_1",
+        "subtasks": []
+      },
+      {
+        "name": "The Sarn Encampment",
+        "areaId": "2_8_town",
+        "subtasks": []
+      },
+      {
+        "name": "The Toxic Conduits",
+        "areaId": "2_8_2_1",
+        "subtasks": [
+          {
+            "name": "Go left",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Doedre's Cesspool",
+        "areaId": "2_8_2_2",
+        "subtasks": []
+      },
+      {
+        "name": "The Cauldron",
+        "zoneName": "The Cauldron",
+        "subtasks": [
+          {
+            "name": "Kill Doedre",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Sewer Outlet",
+        "zoneName": "Sewer Outlet",
+        "subtasks": [
+          {
+            "name": "Go up-right",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Quay",
+        "areaId": "2_8_8",
+        "subtasks": [
+          {
+            "name": "Follow the left wall",
+            "subtasks": []
+          },
+          {
+            "name": "Take the Ankh of Eternity",
+            "subtasks": []
+          },
+          {
+            "name": "Go down-right",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Resurrection Site",
+        "zoneName": "The Resurrection Site",
+        "subtasks": [
+          {
+            "name": "Talk to Clarissa",
+            "subtasks": []
+          },
+          {
+            "name": "Kill Tolman",
+            "subtasks": []
+          },
+          {
+            "name": "Go up-right",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Grain Gate",
+        "areaId": "2_8_9",
+        "subtasks": [
+          {
+            "name": "Kill the Gemling Legionnaires",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Imperial Fields",
+        "areaId": "2_8_10",
+        "subtasks": []
+      },
+      {
+        "name": "The Solaris Temple Level 1",
+        "areaId": "2_8_12_1",
+        "subtasks": [
+          {
+            "name": "Follow the road to the waypoint",
+            "subtasks": []
+          },
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          },
+          {
+            "name": "Go up-left",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Solaris Temple Level 2",
+        "areaId": "2_8_12_2",
+        "subtasks": [
+          {
+            "name": "Kill Dawn and take the Sun Orb",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Sarn Encampment",
+        "areaId": "2_8_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Hargan",
+            "subtasks": []
+          },
+          {
+            "name": "Hand in to Maramoa",
+            "subtasks": []
+          },
+          {
+            "name": "Hand in to Clarissa",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Solaris Temple",
+            "waypointDestinationAreaId": "2_8_12_1",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Solaris Temple",
+        "areaId": "2_8_12_1",
+        "subtasks": []
+      },
+      {
+        "name": "The Solaris Concourse",
+        "areaId": "2_8_11",
+        "subtasks": []
+      },
+      {
+        "name": "The Harbour Bridge",
+        "areaId": "2_8_13",
+        "subtasks": []
+      },
+      {
+        "name": "The Lunaris Concourse",
+        "areaId": "2_8_6",
+        "subtasks": [
+          {
+            "name": "Go up-left",
+            "subtasks": []
+          },
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Lunaris Temple Level 1",
+        "areaId": "2_8_7_1_",
+        "subtasks": []
+      },
+      {
+        "name": "The Lunaris Temple Level 2",
+        "areaId": "2_8_7_2",
+        "subtasks": [
+          {
+            "name": "Kill Dusk and take the Moon Orb",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Sarn Encampment",
+        "areaId": "2_8_town",
+        "subtasks": [
+          {
+            "name": "Waypoint to The Lunaris Concourse",
+            "waypointDestinationAreaId": "2_8_6",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Harbour Bridge",
+        "areaId": "2_8_13",
+        "subtasks": [
+          {
+            "name": "Go down-right",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Sky Shrine",
+        "zoneName": "The Sky Shrine",
+        "subtasks": [
+          {
+            "name": "Kill Lunaris and Solaris",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Blood Aqueduct",
+        "areaId": "2_9_1",
+        "subtasks": []
+      },
+      {
+        "name": "Highgate",
+        "areaId": "2_9_town",
+        "subtasks": [
+          {
+            "name": "Waypoint to The Lunaris Concourse",
+            "waypointDestinationAreaId": "2_8_6",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Lunaris Concourse",
+        "areaId": "2_8_6",
+        "subtasks": [
+          {
+            "name": "Go down",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Bath House",
+        "areaId": "2_8_5",
+        "subtasks": [
+          {
+            "name": "Go left",
+            "subtasks": []
+          },
+          {
+            "name": "Complete the Trial of Ascendancy",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The High Gardens",
+        "areaId": "2_8_4",
+        "subtasks": [
+          {
+            "name": "Go left",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Pools of Terror",
+        "zoneName": "The Pools of Terror",
+        "subtasks": [
+          {
+            "name": "Kill Yugul",
+            "subtasks": []
+          },
+          {
+            "name": "Portal",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Sarn Encampment",
+        "areaId": "2_8_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Hargan",
+            "subtasks": []
+          }
+        ]
+      }
+    ]
   }
 ]
