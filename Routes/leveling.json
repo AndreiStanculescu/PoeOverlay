@@ -2472,5 +2472,572 @@
         ]
       }
     ]
+  },
+  {
+    "name": "Act 9",
+    "tasks": [
+      {
+        "name": "Highgate",
+        "areaId": "2_9_town",
+        "subtasks": []
+      },
+      {
+        "name": "The Descent",
+        "areaId": "2_9_2",
+        "subtasks": []
+      },
+      {
+        "name": "The Vastiri Desert",
+        "areaId": "2_9_3",
+        "subtasks": [
+          {
+            "name": "Go right",
+            "subtasks": []
+          },
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          },
+          {
+            "name": "Take the Storm Blade",
+            "subtasks": []
+          },
+          {
+            "name": "Go up-left",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Foothills",
+        "areaId": "2_9_5",
+        "subtasks": [
+          {
+            "name": "Go up-right until the cliff",
+            "subtasks": []
+          },
+          {
+            "name": "Go up-left",
+            "subtasks": []
+          },
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Boiling Lake",
+        "areaId": "2_9_6",
+        "subtasks": [
+          {
+            "name": "Go up-right",
+            "subtasks": []
+          },
+          {
+            "name": "Kill the Basilisk and take the Basilisk Acid",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Highgate",
+        "areaId": "2_9_town",
+        "subtasks": [
+          {
+            "name": "Talk to Sin",
+            "subtasks": []
+          },
+          {
+            "name": "Hand in to Petarus and take the Bottled Storm",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Vastiri Desert",
+            "waypointDestinationAreaId": "2_9_3",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Vastiri Desert",
+        "areaId": "2_9_3",
+        "subtasks": [
+          {
+            "name": "Go up-right",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Oasis",
+        "areaId": "2_9_4",
+        "subtasks": []
+      },
+      {
+        "name": "The Sand Pit",
+        "zoneName": "The Sand Pit",
+        "subtasks": [
+          {
+            "name": "Kill Shakari",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Highgate",
+        "areaId": "2_9_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Irasha",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Foothills",
+            "waypointDestinationAreaId": "2_9_5",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Foothills",
+        "areaId": "2_9_5",
+        "subtasks": [
+          {
+            "name": "Go up-left",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Tunnel",
+        "areaId": "2_9_7",
+        "subtasks": [
+          {
+            "name": "Complete the Trial of Ascendancy before the waypoint",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Quarry",
+        "areaId": "2_9_8",
+        "subtasks": [
+          {
+            "name": "Go up-left",
+            "subtasks": []
+          },
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Shrine of the Winds",
+        "zoneName": "The Shrine of the Winds",
+        "subtasks": [
+          {
+            "name": "Go up-right or down-left",
+            "subtasks": []
+          },
+          {
+            "name": "Kill Garukhan and take the Sekhema Feather",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Highgate",
+        "areaId": "2_9_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Irasha",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Quarry",
+            "waypointDestinationAreaId": "2_9_8",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Quarry",
+        "areaId": "2_9_8",
+        "subtasks": [
+          {
+            "name": "Go up-left or up-right",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Refinery",
+        "areaId": "2_9_9",
+        "subtasks": [
+          {
+            "name": "Kill General Adus and take the Trarthan Powder",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Highgate",
+        "areaId": "2_9_town",
+        "subtasks": [
+          {
+            "name": "Waypoint to The Quarry",
+            "waypointDestinationAreaId": "2_9_8",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Quarry",
+        "areaId": "2_9_8",
+        "subtasks": [
+          {
+            "name": "Talk to Sin",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Belly of the Beast",
+        "areaId": "2_9_10_1",
+        "subtasks": []
+      },
+      {
+        "name": "The Rotting Core",
+        "areaId": "2_9_10_2",
+        "subtasks": []
+      },
+      {
+        "name": "The Black Core",
+        "zoneName": "The Black Core",
+        "subtasks": [
+          {
+            "name": "Talk to Sin",
+            "subtasks": []
+          },
+          {
+            "name": "Kill Doedre",
+            "subtasks": []
+          },
+          {
+            "name": "Kill Maligaro",
+            "subtasks": []
+          },
+          {
+            "name": "Kill Shavronne",
+            "subtasks": []
+          },
+          {
+            "name": "Talk to Sin",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Black Heart",
+        "zoneName": "The Black Heart",
+        "subtasks": [
+          {
+            "name": "Kill the Depraved Trinity",
+            "subtasks": []
+          },
+          {
+            "name": "Portal",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Highgate",
+        "areaId": "2_9_town",
+        "subtasks": []
+      }
+    ]
+  },
+  {
+    "name": "Act 10",
+    "tasks": [
+      {
+        "name": "Oriath Docks",
+        "areaId": "2_10_town",
+        "subtasks": []
+      },
+      {
+        "name": "The Cathedral Rooftop",
+        "areaId": "2_10_1",
+        "subtasks": [
+          {
+            "name": "Go up",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Cathedral Apex",
+        "zoneName": "The Cathedral Apex",
+        "subtasks": [
+          {
+            "name": "Kill Plaguewing",
+            "subtasks": []
+          },
+          {
+            "name": "Go down-right",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Ravaged Square",
+        "areaId": "2_10_2",
+        "subtasks": [
+          {
+            "name": "Place a portal in the plaza",
+            "subtasks": []
+          },
+          {
+            "name": "Go down",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Control Blocks",
+        "areaId": "2_10_7",
+        "subtasks": [
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to Oriath Docks",
+            "waypointDestinationAreaId": "2_10_town",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Oriath Docks",
+        "areaId": "2_10_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Lani",
+            "subtasks": []
+          },
+          {
+            "name": "Take the portal",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Ravaged Square",
+        "areaId": "2_10_2",
+        "subtasks": [
+          {
+            "name": "Go up-right",
+            "subtasks": []
+          },
+          {
+            "name": "Get the waypoint",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Ossuary",
+        "areaId": "2_10_9",
+        "subtasks": [
+          {
+            "name": "Complete the Trial of Ascendancy",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Oriath Docks",
+        "areaId": "2_10_town",
+        "subtasks": [
+          {
+            "name": "Waypoint to The Control Blocks",
+            "waypointDestinationAreaId": "2_10_7",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Control Blocks",
+        "areaId": "2_10_7",
+        "subtasks": [
+          {
+            "name": "Kill Vilenta",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Oriath Docks",
+        "areaId": "2_10_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Lani",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to the Aspirant's Plaza",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Ascend",
+        "subtasks": []
+      },
+      {
+        "name": "The Ravaged Square",
+        "areaId": "2_10_2",
+        "subtasks": [
+          {
+            "name": "Go right",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Torched Courts",
+        "areaId": "2_10_3",
+        "subtasks": []
+      },
+      {
+        "name": "The Desecrated Chambers",
+        "areaId": "2_10_4",
+        "subtasks": []
+      },
+      {
+        "name": "The Sanctum of Innocence",
+        "zoneName": "The Sanctum of Innocence",
+        "subtasks": [
+          {
+            "name": "Kill Avarius and take the Staff of Purity",
+            "subtasks": []
+          },
+          {
+            "name": "Logout",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Oriath Docks",
+        "areaId": "2_10_town",
+        "subtasks": [
+          {
+            "name": "Talk to Bannon",
+            "subtasks": []
+          },
+          {
+            "name": "Hand in to Lani",
+            "subtasks": []
+          },
+          {
+            "name": "Waypoint to The Ravaged Square",
+            "waypointDestinationAreaId": "2_10_2",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Ravaged Square",
+        "areaId": "2_10_2",
+        "subtasks": [
+          {
+            "name": "Go up-right",
+            "subtasks": []
+          },
+          {
+            "name": "Talk to Innocence",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Canals",
+        "areaId": "2_10_5",
+        "subtasks": []
+      },
+      {
+        "name": "The Feeding Trough",
+        "areaId": "2_10_6",
+        "subtasks": [
+          {
+            "name": "Talk to Sin",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "The Altar of Hunger",
+        "zoneName": "The Altar of Hunger",
+        "subtasks": [
+          {
+            "name": "Kill Kitava",
+            "subtasks": []
+          },
+          {
+            "name": "Talk to Sin",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Oriath Docks",
+        "areaId": "2_10_town",
+        "subtasks": [
+          {
+            "name": "Talk to Lilly Roth",
+            "subtasks": []
+          }
+        ]
+      },
+      {
+        "name": "Karui Shores",
+        "areaId": "2_11_endgame_town",
+        "subtasks": [
+          {
+            "name": "Hand in to Lani",
+            "subtasks": []
+          }
+        ]
+      }
+    ]
   }
 ]
