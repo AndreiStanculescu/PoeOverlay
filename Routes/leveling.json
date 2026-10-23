@@ -1786,10 +1786,6 @@
         "areaId": "2_6_12",
         "subtasks": [
           {
-            "name": "Follow the road",
-            "subtasks": []
-          },
-          {
             "name": "Go down-right",
             "subtasks": []
           }
@@ -1824,8 +1820,8 @@
         ]
       },
       {
-        "name": "The Brine King's Throne",
-        "zoneName": "The Brine King's Throne",
+        "name": "The Brine King's Reef",
+        "areaId": "2_6_15",
         "subtasks": [
           {
             "name": "Kill Tsoagoth",
