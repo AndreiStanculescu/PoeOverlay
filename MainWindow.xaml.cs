@@ -888,71 +888,20 @@ namespace MyPoeOverlay
                 JsonElement[] actTasks =
                     act.GetProperty("tasks").EnumerateArray().ToArray();
 
-                for (int taskIndex = 0; taskIndex < actTasks.Length; taskIndex++)
+                foreach (JsonElement task in actTasks)
                 {
-                    JsonElement task = actTasks[taskIndex];
                     string description = FormatDirectionText(
                         GetString(task, "name") ?? "");
                     string? enterAreaId = GetEnterAreaId(task);
-
-                    List<string> waypointDestinations =
-                        GetWaypointDestinations(task);
 
                     _steps.Add(new RouteStep(
                         actName,
                         description,
                         enterAreaId,
                         "",
-                        GetString(task, "zoneName")));
+                        GetString(task, "zoneName"),
+                        IsTopLevelTask: true));
                     AddNestedRouteSteps(actName, task);
-
-                    string? logoutTownAreaId = GetLogoutAreaId(task);
-                    string? nextStepEnterAreaId =
-                        taskIndex + 1 < actTasks.Length
-                            ? GetEnterAreaId(actTasks[taskIndex + 1])
-                            : null;
-
-                    if (logoutTownAreaId != null &&
-                        !string.Equals(
-                            logoutTownAreaId,
-                            nextStepEnterAreaId,
-                            StringComparison.OrdinalIgnoreCase))
-                    {
-                        string townName =
-                            _areaNames.TryGetValue(
-                                logoutTownAreaId, out string? areaName)
-                                ? areaName
-                                : logoutTownAreaId;
-
-                        _steps.Add(new RouteStep(
-                            actName,
-                            "➞ " + townName,
-                            logoutTownAreaId,
-                            ""));
-                    }
-
-                    foreach (string destination in waypointDestinations)
-                    {
-                        if (string.Equals(
-                            destination,
-                            nextStepEnterAreaId,
-                            StringComparison.OrdinalIgnoreCase))
-                        {
-                            continue;
-                        }
-
-                        string destinationName =
-                            _areaNames.TryGetValue(
-                                destination, out string? areaName)
-                                ? areaName
-                                : destination;
-
-                        _steps.Add(new RouteStep(
-                            actName,
-                            "➞ " + destinationName,
-                            destination,
-                            ""));
-                    }
                 }
             }
 
@@ -1265,77 +1214,6 @@ namespace MyPoeOverlay
             return null;
         }
 
-        private static string? GetLogoutAreaId(JsonElement step)
-        {
-            if (!step.TryGetProperty("parts", out JsonElement parts) ||
-                parts.ValueKind != JsonValueKind.Array)
-            {
-                return null;
-            }
-
-            foreach (JsonElement part in parts.EnumerateArray())
-            {
-                if (part.ValueKind == JsonValueKind.Object &&
-                    GetString(part, "type") == "logout")
-                {
-                    return GetString(part, "areaId");
-                }
-            }
-
-            return null;
-        }
-
-        private static List<string> GetWaypointDestinations(JsonElement step)
-        {
-            var destinations = new List<string>();
-            CollectWaypointDestinations(step, destinations);
-            return destinations;
-        }
-
-        private static void CollectWaypointDestinations(
-            JsonElement step, List<string> destinations)
-        {
-            string? waypointDestination =
-                GetString(step, "waypointDestinationAreaId");
-            if (!string.IsNullOrWhiteSpace(waypointDestination) &&
-                !destinations.Contains(
-                    waypointDestination,
-                    StringComparer.OrdinalIgnoreCase))
-            {
-                destinations.Add(waypointDestination);
-            }
-
-            if (step.TryGetProperty("parts", out JsonElement parts) &&
-                parts.ValueKind == JsonValueKind.Array)
-            {
-                foreach (JsonElement part in parts.EnumerateArray())
-                {
-                    if (part.ValueKind != JsonValueKind.Object ||
-                        GetString(part, "type") != "waypoint_use")
-                    {
-                        continue;
-                    }
-
-                    string? destination = GetString(part, "dstAreaId");
-
-                    if (!string.IsNullOrWhiteSpace(destination) &&
-                        !destinations.Contains(
-                            destination,
-                            StringComparer.OrdinalIgnoreCase))
-                    {
-                        destinations.Add(destination);
-                    }
-                }
-            }
-
-            if (step.TryGetProperty("subtasks", out JsonElement subTasks) &&
-                subTasks.ValueKind == JsonValueKind.Array)
-            {
-                foreach (JsonElement subTask in subTasks.EnumerateArray())
-                    CollectWaypointDestinations(subTask, destinations);
-            }
-        }
-
         private async Task MonitorClientLogAsync(
             string path, CancellationToken cancellationToken)
         {
@@ -1552,14 +1430,15 @@ namespace MyPoeOverlay
 
             foreach (var item in actSteps)
             {
-                if (item.Step.IsAreaTask)
+                if (item.Step.IsAreaTask || item.Step.IsTopLevelTask)
                 {
                     if (currentGroup.HasValue)
                         objectiveGroups.Add(currentGroup.Value);
 
                     string title = item.Step.ZoneName
-                        ?? (_areaNames.TryGetValue(
-                                item.Step.EnterAreaId!,
+                        ?? (item.Step.EnterAreaId != null &&
+                            _areaNames.TryGetValue(
+                                item.Step.EnterAreaId,
                                 out string? areaName)
                             ? areaName
                             : item.Step.Description);
@@ -2581,7 +2460,8 @@ namespace MyPoeOverlay
             string Description,
             string? EnterAreaId,
             string Details,
-            string? ZoneName = null)
+            string? ZoneName = null,
+            bool IsTopLevelTask = false)
         {
             public bool IsAreaTask =>
                 EnterAreaId != null || ZoneName != null;

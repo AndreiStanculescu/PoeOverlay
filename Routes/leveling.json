@@ -391,16 +391,17 @@
       {
         "name": "The Chamber of Sins Level 1",
         "areaId": "1_2_6_1",
-        "subtasks": []
+        "subtasks": [
+          {
+            "name": "Go in the same direction as the waypoint",
+            "subtasks": []
+          }
+        ]
       },
       {
         "name": "The Chamber of Sins Level 2",
         "areaId": "1_2_6_2",
         "subtasks": [
-          {
-            "name": "Go in the same direction as the waypoint",
-            "subtasks": []
-          },
           {
             "name": "Complete the Trial of Ascendancy",
             "subtasks": []
@@ -483,7 +484,7 @@
             "subtasks": []
           },
           {
-            "name": "Waypoint to The Riverways",
+            "name": "Enter the Riverways",
             "waypointDestinationAreaId": "1_2_7",
             "subtasks": []
           }
@@ -1171,12 +1172,12 @@
             "name": "Waypoint to The Sarn Encampment (Act 3)",
             "waypointDestinationAreaId": "1_3_town",
             "subtasks": []
-          },
-          {
-            "name": "Ascend",
-            "subtasks": []
           }
         ]
+      },
+      {
+        "name": "Ascend",
+        "subtasks": []
       },
       {
         "name": "The Crystal Veins",
